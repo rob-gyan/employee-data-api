@@ -1,0 +1,38 @@
+{
+  "name": "employeedata",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "assert": "^2.0.0",
+    "aws-sdk": "^2.1070.0",
+    "body-parser": "^1.19.1",
+    "config": "^3.3.7",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "csurf": "^1.11.0",
+    "dotenv": "^15.0.0",
+    "express": "^4.17.2",
+    "express-fileupload": "^1.3.1",
+    "express-validator": "^6.14.0",
+    "fs": "^0.0.1-security",
+    "hi-base32": "^0.5.1",
+    "jsonwebtoken": "^8.5.1",
+    "md5": "^2.3.0",
+    "mysql": "^2.18.1",
+    "mysql2": "^2.3.3",
+    "qrcode": "^1.5.0",
+    "sequelize": "^6.15.0",
+    "speakeasy": "^2.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
