@@ -196,4 +196,33 @@ router.get("/getAllUpload", async (req, res) => {
   }
 });
 
+// get all UrlBlog
+router.post("/getAllUrlBlog", async (req, res) => {
+  try {
+    let getAllUrlBlog = await projectController.getAllUrlBlog(req);
+    res.status(200).send(getAllUrlBlog);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+// get all SocialTag
+router.post("/getAllSocialTag", async (req, res) => {
+  try {
+    let getAllSocialTag = await projectController.getAllSocialTag(req);
+    res.status(200).send(getAllSocialTag);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+// get all General fields
+router.post("/getAllGeneralField", async (req, res) => {
+  try {
+    let getAllGeneralField = await projectController.getAllGeneralField(req);
+    res.status(200).send(getAllGeneralField);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
 module.exports = router;

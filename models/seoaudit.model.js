@@ -1,15 +1,9 @@
 module.exports = (sequelize, Sequelize) => {
   const SeoAudit = sequelize.define("seoaudits", {
-    projectType: {
-      type: Sequelize.TEXT,
-    },
-    checkQuestion: {
+    seoAuditTableId: {
       type: Sequelize.TEXT,
     },
     grading: {
-      type: Sequelize.TEXT,
-    },
-    tools: {
       type: Sequelize.TEXT,
     },
     assign: {

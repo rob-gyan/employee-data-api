@@ -13,6 +13,8 @@ const Url = db.urls;
 const Website = db.websites;
 const ImageSize = db.imageSizes;
 const Upload = db.uploads;
+const SocialTag = db.socialtags;
+const UrlBlog = db.urlblogs;
 
 // **********project create api controller**********
 exports.projectCreate = async (req) => {
@@ -533,6 +535,60 @@ exports.getAllUpload = async (req) => {
     var allUpload = await Upload.findAll();
     return {
       data: allUpload,
+      error: null,
+      message: "success",
+      statusCode: 200,
+    };
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+
+// get all UrlBlog
+exports.getAllUrlBlog = async (req) => {
+  const { projectId } = req.body;
+  try {
+    var allUrlBlog = await UrlBlog.findAll({ where: { projectId } });
+
+    return {
+      data: allUrlBlog,
+      error: null,
+      message: "success",
+      statusCode: 200,
+    };
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+// get all social tags
+exports.getAllSocialTag = async (req) => {
+  const { projectId } = req.body;
+  try {
+    var allSocialTag = await SocialTag.findAll({
+      where: { projectId },
+    });
+
+    return {
+      data: allSocialTag,
+      error: null,
+      message: "success",
+      statusCode: 200,
+    };
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+
+// get all general fields
+exports.getAllGeneralField = async (req) => {
+  const { projectId } = req.body;
+  try {
+    var allGeneralField = await SocialTag.findAll({
+      where: { projectId },
+    });
+
+    return {
+      data: allGeneralField,
       error: null,
       message: "success",
       statusCode: 200,

@@ -1,13 +1,15 @@
 let db = require("../../../models");
 
 const SocialBook = db.socialbooks;
+const SocialTag = db.socialtags;
+const UrlBlog = db.urlblogs;
 const Project = db.projects;
 
 // **********socialBook create api controller**********
 exports.socialBookCreate = async (req) => {
   try {
     let {
-      urlBlogs,
+      urlBlog,
       tags,
       liveLinks,
       assignee,
@@ -43,9 +45,27 @@ exports.socialBookCreate = async (req) => {
       };
     }
 
+    // find urlblog
+    let urlBlogs = await UrlBlog.findOne({
+      where: { urlBlog, projectId },
+    });
+
+    if (urlBlogs == null) {
+      await UrlBlog.create({ urlBlog, projectId });
+    }
+
+    // find social tags
+    let socialTag = await SocialTag.findOne({
+      where: { tags, projectId },
+    });
+
+    if (socialTag == null) {
+      await SocialTag.create({ tags, projectId });
+    }
+
     // create socialBook
     var socialBookCreate = await SocialBook.create({
-      urlBlogs,
+      urlBlog,
       tags,
       liveLinks,
       assignee,
@@ -76,7 +96,7 @@ exports.socialBookUpdate = async (req) => {
     let {
       socialBookId,
       projectId,
-      urlBlogs,
+      urlBlog,
       tags,
       liveLinks,
       assignee,
@@ -110,7 +130,7 @@ exports.socialBookUpdate = async (req) => {
     }
     // update socialBook
     var updateSocialBook = await socialBookFind.update({
-      urlBlogs,
+      urlBlog,
       tags,
       liveLinks,
       assignee,

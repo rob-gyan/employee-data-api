@@ -66,6 +66,11 @@ db.imageSizes = require("./generalModel/imageSize.model.js")(
   Sequelize
 );
 db.uploads = require("./generalModel/upload.model.js")(sequelize, Sequelize);
+db.urlblogs = require("./generalModel/urlBlog.model.js")(sequelize, Sequelize);
+db.socialtags = require("./generalModel/socialTags.model.js")(
+  sequelize,
+  Sequelize
+);
 db.tests = require("./test.model.js")(sequelize, Sequelize);
 
 // ******socialmedia related table start*****

@@ -1,5 +1,6 @@
 let db = require("../../../models");
 
+const SeoAuditTable = db.seoaudittables;
 const SeoAudit = db.seoaudits;
 const Project = db.projects;
 
@@ -8,7 +9,7 @@ exports.seoAuditUpdate = async (req) => {
   try {
     let {
       projectType,
-      checkQuestion,
+      seoAuditTableId,
       projectId,
       grading,
       assign,
@@ -17,7 +18,7 @@ exports.seoAuditUpdate = async (req) => {
       status,
       timeEstimation,
       time,
-      tools,
+
       topKey,
       amount,
       note,
@@ -44,15 +45,14 @@ exports.seoAuditUpdate = async (req) => {
 
     // find seoAudit
     let seoAuditFind = await SeoAudit.findOne({
-      where: { checkQuestion },
+      where: { seoAuditTableId },
     });
 
     if (seoAuditFind == null) {
       updateSeoAudit = await SeoAudit.create({
         projectType,
-        checkQuestion,
+        seoAuditTableId,
         grading,
-        tools,
         assign,
         reassign,
         date,
@@ -116,11 +116,11 @@ exports.getAllSeoAudit = async (req) => {
 // **********seoAudit update status api controller**********
 exports.seoAuditUpdateStatus = async (req) => {
   try {
-    let { checkQuestion, status } = req.body;
+    let { seoAuditTableId, status } = req.body;
 
     // find seoAudit
     let seoAuditFind = await SeoAudit.findOne({
-      where: { checkQuestion },
+      where: { seoAuditTableId },
     });
 
     // if seoAudit doesn't exist
@@ -152,11 +152,11 @@ exports.seoAuditUpdateStatus = async (req) => {
 // **********seoAudit update time api controller**********
 exports.seoAuditUpdateTime = async (req) => {
   try {
-    let { checkQuestion, time } = req.body;
+    let { seoAuditTableId, time } = req.body;
 
     // find seoAudit
     let seoAuditFind = await SeoAudit.findOne({
-      where: { checkQuestion },
+      where: { seoAuditTableId },
     });
 
     // if seoAudit doesn't exist
@@ -187,11 +187,11 @@ exports.seoAuditUpdateTime = async (req) => {
 
 // **********get project task on the basis of projectId,seoAuditId  **********
 exports.getSeoAuditTask = async (req) => {
-  const { checkQuestion, projectId } = req.body;
+  const { seoAuditTableId, projectId } = req.body;
   try {
     // find SeoAudit
     let allSeoAudit = await SeoAudit.findOne({
-      where: { checkQuestion: checkQuestion, projectId },
+      where: { seoAuditTableId: seoAuditTableId, projectId },
     });
 
     const data = allSeoAudit;
@@ -1324,13 +1324,95 @@ exports.uploadSeoAuditTable = async (req) => {
         tool: "Screaming Frog",
       },
     ];
-    // if SeoAudit doesn't exist
+    for (ele of seoAudit) {
+      const create = await SeoAuditTable.create({
+        tableCategory: ele.tableCategory,
+        tableSubCategory: ele.tableSubCategory,
+        checkQuestion: ele.checkQuestion,
+        tool: ele.tool,
+      });
+    }
 
     return {
-      data: null,
-      error: "SeoAudit doesn't exist",
-      message: "Failed",
-      statusCode: 400,
+      data: "successfully entered all table",
+      error: null,
+      message: "Success",
+      statusCode: 200,
+    };
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+
+// **********get SeoAudit table api  controller**********
+
+exports.getSeoAuditTable = async (req) => {
+  const { projectId } = req.body;
+  try {
+    const getTable = await SeoAuditTable.findAll();
+    const getData = await SeoAudit.findAll({ where: { projectId } });
+    const tableLength = getTable.length;
+    // let arr3 = getTable.map((item, i) => Object.assign({}, item, getData[i]));
+    // console.log(arr3);
+    // return;
+    const allData = [];
+    for (let index = 0; index < tableLength; index++) {
+      const element = getTable[index];
+      const allTableElement = [element];
+      for (const ele of allTableElement) {
+        const getData = await SeoAudit.findAll({
+          where: { projectId },
+        });
+
+        for (const data of getData) {
+          allData.push({
+            seoAuditTableId: ele.id,
+            grading: data.status,
+            assign: data.assign,
+          });
+        }
+        // console.log(getData);
+        // allData.push({
+        //   seoAuditTableId: ele.id,
+        // grading: getData.grading,
+        // assign: getData.assign,
+        // reassign: getData.reassign,
+        // date: getData.date,
+        // status: getData.status,
+        // timeEstimation: getData.timeEstimation,
+        // time: getData.time,
+        // projectId: getData.projectId,
+        // taskType: getData.taskType,
+        // amount: getData.amount,
+        // topKey: getData.topKey,
+        // note: getData.note,
+        // startDate: getData.startDate,
+        // dueDate: getData.dueDate,
+        // createdAt: getData.createdAt,
+        // updatedAt: getData.updatedAt,
+        // });
+      }
+    }
+    // for (ele of getData) {
+    //   for (element of getTable) {
+    //     allData.push({
+    //       status: ele.status,
+    //     });
+    //   }
+    // }
+    // console.log(allData);
+    // const merge = [];
+    // for (let i = 0; i < getTable.length; i++) {
+    //   merged.push({
+    //     ...getTable[i],
+    //     // ...getData[i],
+    //   });
+    // }
+    return {
+      data: allData,
+      error: null,
+      message: "Success",
+      statusCode: 200,
     };
   } catch (error) {
     res.status(500).send(error.message);
