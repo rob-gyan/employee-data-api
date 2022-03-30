@@ -14,10 +14,10 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.TEXT,
     },
     startDate: {
-      type: Sequelize.DATE,
+      type: Sequelize.TEXT,
     },
     dueDate: {
-      type: Sequelize.DATE,
+      type: Sequelize.TEXT,
     },
     timeEstimation: {
       type: Sequelize.TIME,

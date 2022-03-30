@@ -5,6 +5,11 @@ const SocialMediaContent = db.socialmediapostcontents;
 const SocialMediaPost = db.socialmediaposts;
 const SocialMedia = db.socialmedias;
 const Project = db.projects;
+const Plateform = db.plateforms;
+const Media = db.medias;
+const Post = db.posts;
+const AdditionalImage = db.additionalimages;
+const Type = db.types;
 
 // **********socialMedia create api controller**********
 exports.socialMediaCreate = async (req) => {
@@ -63,6 +68,49 @@ exports.socialMediaCreate = async (req) => {
         statusCode: 400,
       };
     }
+
+    // find type
+    let typeFind = await Type.findOne({
+      where: { type: postContentType },
+    });
+
+    if (typeFind == null) {
+      await Type.create({ type: postContentType });
+    }
+
+    // find plateform
+    let plateformFind = await Plateform.findOne({
+      where: { postContentPlateform },
+    });
+    if (plateformFind == null) {
+      await Plateform.create({ postContentPlateform });
+    }
+
+    // find media
+    let mediaFind = await Media.findOne({
+      where: { media },
+    });
+    if (mediaFind == null) {
+      await Media.create({ media });
+    }
+
+    // find AdditionalImage
+    let additionalimage = await AdditionalImage.findOne({
+      where: { mediaAdditionalImage },
+    });
+    if (additionalimage == null) {
+      await AdditionalImage.create({ mediaAdditionalImage });
+    }
+
+    // find Post
+    let generalPost = await Post.findOne({
+      where: { post },
+    });
+
+    if (generalPost == null) {
+      await Post.create({ post });
+    }
+
     // add socialMediaContent topic information
     var socialMediaContentCreate = await SocialMediaContent.create({
       postContent,
@@ -209,6 +257,49 @@ exports.socialMediaUpdate = async (req) => {
         statusCode: 400,
       };
     }
+
+    // find type
+    let typeFind = await Type.findOne({
+      where: { type: postContentType },
+    });
+
+    if (typeFind == null) {
+      await Type.create({ type: postContentType });
+    }
+
+    // find plateform
+    let plateformFind = await Plateform.findOne({
+      where: { postContentPlateform },
+    });
+    if (plateformFind == null) {
+      await Plateform.create({ postContentPlateform });
+    }
+
+    // find media
+    let mediaFind = await Media.findOne({
+      where: { media },
+    });
+    if (mediaFind == null) {
+      await Media.create({ media });
+    }
+
+    // find AdditionalImage
+    let additionalimage = await AdditionalImage.findOne({
+      where: { mediaAdditionalImage },
+    });
+    if (additionalimage == null) {
+      await AdditionalImage.create({ mediaAdditionalImage });
+    }
+
+    // find Post
+    let generalPost = await Post.findOne({
+      where: { post },
+    });
+
+    if (generalPost == null) {
+      await Post.create({ post });
+    }
+
     // update socialMediaContent
     await socialMediaContentFind.update({
       postContent,
@@ -311,7 +402,6 @@ exports.getAllSocialMedia = async (req) => {
       const allSocialMediaElement = [element];
 
       for (const ele of allSocialMediaElement) {
-        console.log(ele.id);
         let allSocialMediaPostContent = await SocialMediaContent.findOne({
           where: { id: ele.postContentId },
         });
@@ -356,10 +446,24 @@ exports.getAllSocialMedia = async (req) => {
           postTime: allSocialMediaPost.postTime,
           projectId: ele.projectId,
           projectName: ele.projectName,
+          taskType: ele.taskType,
+          status:
+            allSocialMediaPostContent.postContentStatus == "COMPLETE"
+              ? "COMPLETE"
+              : allSocialMedias.mediaStatus == "COMPLETE"
+              ? "COMPLETE"
+              : allSocialMediaPost.postStatus == "COMPLETE"
+              ? "COMPLETE"
+              : "PENDING",
         });
       }
     }
-
+    allSocialMedia.map(async (data) => {
+      let socialMediaUpdateStatus = await SocialMedia.findOne({
+        where: { id: data.id },
+      });
+      await socialMediaUpdateStatus.update({ status: data.status });
+    });
     return {
       data: allSocialMedia,
       error: null,

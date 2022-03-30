@@ -228,6 +228,30 @@ exports.blogUpdate = async (req) => {
         statusCode: 400,
       };
     }
+    // find website
+    let urlWebsite = await Website.findOne({
+      where: { topicWebsite },
+    });
+
+    if (urlWebsite == null) {
+      await Website.create({ topicWebsite });
+    }
+
+    // // find imageSize
+    let urlImageSize = await ImageSize.findOne({
+      where: { imageSize },
+    });
+    if (urlImageSize == null) {
+      await ImageSize.create({ imageSize });
+    }
+
+    // find upload
+    let urlUpload = await Upload.findOne({
+      where: { upload },
+    });
+    if (urlUpload == null) {
+      await Upload.create({ upload });
+    }
     // update blog topic
     await blogTopicFind.update({
       topic,
@@ -379,7 +403,6 @@ exports.getAllBlogs = async (req) => {
       }
     }
     allBlog.map(async (data) => {
-      console.log(data.status);
       let blogUpdateStatus = await Blog.findOne({
         where: { id: data.id },
       });

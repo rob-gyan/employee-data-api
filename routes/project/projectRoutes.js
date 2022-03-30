@@ -215,6 +215,47 @@ router.post("/getAllSocialTag", async (req, res) => {
   }
 });
 
+// get all plateform
+router.get("/getAllPlateform", async (req, res) => {
+  try {
+    let getAllPlateform = await projectController.getAllPlateform(req);
+    res.status(200).send(getAllPlateform);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+// get all media
+router.get("/getAllMedia", async (req, res) => {
+  try {
+    let getAllMedia = await projectController.getAllMedia(req);
+    res.status(200).send(getAllMedia);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+// get all additional image
+router.get("/getAllAdditionalImage", async (req, res) => {
+  try {
+    let getAllAdditionalImage = await projectController.getAllAdditionalImage(
+      req
+    );
+    res.status(200).send(getAllAdditionalImage);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+// get all post
+router.get("/getAllPost", async (req, res) => {
+  try {
+    let getAllPost = await projectController.getAllpost(req);
+    res.status(200).send(getAllPost);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
 // get all General fields
 router.post("/getAllGeneralField", async (req, res) => {
   try {

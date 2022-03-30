@@ -15,6 +15,10 @@ const ImageSize = db.imageSizes;
 const Upload = db.uploads;
 const SocialTag = db.socialtags;
 const UrlBlog = db.urlblogs;
+const Plateform = db.plateforms;
+const Media = db.medias;
+const Post = db.posts;
+const AdditionalImage = db.additionalimages;
 
 // **********project create api controller**********
 exports.projectCreate = async (req) => {
@@ -570,6 +574,70 @@ exports.getAllSocialTag = async (req) => {
 
     return {
       data: allSocialTag,
+      error: null,
+      message: "success",
+      statusCode: 200,
+    };
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+
+// get all plateform
+exports.getAllPlateform = async (req) => {
+  try {
+    var allPlateform = await Plateform.findAll();
+
+    return {
+      data: allPlateform,
+      error: null,
+      message: "success",
+      statusCode: 200,
+    };
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+
+// get all posts
+exports.getAllpost = async (req) => {
+  try {
+    var allPost = await Post.findAll();
+
+    return {
+      data: allPost,
+      error: null,
+      message: "success",
+      statusCode: 200,
+    };
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+
+// get all media
+exports.getAllMedia = async (req) => {
+  try {
+    var allMedia = await Media.findAll();
+
+    return {
+      data: allMedia,
+      error: null,
+      message: "success",
+      statusCode: 200,
+    };
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+
+// get all additional image
+exports.getAllAdditionalImage = async (req) => {
+  try {
+    var allAdditionalImage = await AdditionalImage.findAll();
+
+    return {
+      data: allAdditionalImage,
       error: null,
       message: "success",
       statusCode: 200,

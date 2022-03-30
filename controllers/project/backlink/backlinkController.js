@@ -183,6 +183,45 @@ exports.backlinkUpdate = async (req) => {
         statusCode: 400,
       };
     }
+
+    // find type
+    let urlFind = await Url.findOne({
+      where: { url },
+    });
+    if (urlFind == null) {
+      await Url.create({ url });
+    }
+
+    // find type
+    let typeFind = await Type.findOne({
+      where: { type },
+    });
+    if (typeFind == null) {
+      await Type.create({ type });
+    }
+    // find category
+    let categoryFind = await Category.findOne({
+      where: { category },
+    });
+    if (categoryFind == null) {
+      await Category.create({ category });
+    }
+
+    // find profile
+    let profileFind = await Profile.findOne({
+      where: { profile },
+    });
+    if (profileFind == null) {
+      await Profile.create({ profile });
+    }
+
+    // find keyword
+    let keywordFind = await Keyword.findOne({
+      where: { keyword: keywordGroup },
+    });
+    if (keywordFind == null) {
+      await Keyword.create({ keyword: keywordGroup, projectId });
+    }
     // update backlink
     var updateBacklink = await backlinkFind.update({
       type,

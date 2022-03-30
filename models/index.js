@@ -71,6 +71,16 @@ db.socialtags = require("./generalModel/socialTags.model.js")(
   sequelize,
   Sequelize
 );
+db.plateforms = require("./generalModel/platform.model.js")(
+  sequelize,
+  Sequelize
+);
+db.medias = require("./generalModel/media.model.js")(sequelize, Sequelize);
+db.posts = require("./generalModel/post.model.js")(sequelize, Sequelize);
+db.additionalimages = require("./generalModel/additionalimage.model.js")(
+  sequelize,
+  Sequelize
+);
 db.tests = require("./test.model.js")(sequelize, Sequelize);
 
 // ******socialmedia related table start*****

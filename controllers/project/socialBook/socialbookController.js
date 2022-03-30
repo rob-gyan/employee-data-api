@@ -128,6 +128,21 @@ exports.socialBookUpdate = async (req) => {
         statusCode: 400,
       };
     }
+    // find urlblog
+    let urlBlogs = await UrlBlog.findOne({
+      where: { urlBlog, projectId },
+    });
+    if (urlBlogs == null) {
+      await UrlBlog.create({ urlBlog, projectId });
+    }
+
+    // find social tags
+    let socialTag = await SocialTag.findOne({
+      where: { tags, projectId },
+    });
+    if (socialTag == null) {
+      await SocialTag.create({ tags, projectId });
+    }
     // update socialBook
     var updateSocialBook = await socialBookFind.update({
       urlBlog,

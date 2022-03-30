@@ -144,6 +144,30 @@ exports.fourmUpdate = async (req) => {
         statusCode: 400,
       };
     }
+    // find category
+    let categoryFind = await Category.findOne({
+      where: { category },
+    });
+    if (categoryFind == null) {
+      await Category.create({ category });
+    }
+    // find profile
+    let profileFind = await Profile.findOne({
+      where: { profile },
+    });
+
+    if (profileFind == null) {
+      await Profile.create({ profile });
+    }
+
+    // find keyword
+    let keywordFind = await Keyword.findOne({
+      where: { keyword: keywordGroup },
+    });
+    if (keywordFind == null) {
+      await Keyword.create({ keyword: keywordGroup, projectId });
+    }
+
     // update fourm
     var updateFourm = await fourmFind.update({
       type,
