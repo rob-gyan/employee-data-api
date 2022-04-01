@@ -1,6 +1,9 @@
 let db = require("../../models");
 
 const Project = db.projects;
+const SeoAudit = db.seoaudits;
+const SocialMediaTable = db.socialmediatables;
+const Discussion = db.discussions;
 const Blog = db.blogs;
 const Fourm = db.fourms;
 const Backlink = db.backlinks;
@@ -420,12 +423,116 @@ exports.deleteProject = async (req) => {
       };
     }
 
-    return {
-      data: deleteProject,
-      error: null,
-      message: "SUCCESS",
-      statusCode: 200,
-    };
+    await Backlink.destroy({
+      where: { projectId },
+    });
+
+    // delete blog
+    let findBlog = await Blog.findOne({ where: { projectId } });
+    let findSocialMedia = await SocialMediaTable.findOne({
+      where: { projectId },
+    });
+    console.log(findBlog);
+    if (findBlog === null) {
+      // delete fourm
+      await Fourm.destroy({
+        where: { projectId },
+      });
+
+      // delete seo audit
+      await SeoAudit.destroy({
+        where: { projectId },
+      });
+
+      // delete social book
+      await SocialBook.destroy({
+        where: { projectId },
+      });
+
+      // delete discussion
+      let d = await Discussion.destroy({
+        where: { projectId },
+      });
+
+      return {
+        data: deleteProject,
+        error: null,
+        message: "SUCCESS",
+        statusCode: 200,
+      };
+    } else if (findSocialMedia === null) {
+      // delete fourm
+      await Fourm.destroy({
+        where: { projectId },
+      });
+
+      // delete seo audit
+      await SeoAudit.destroy({
+        where: { projectId },
+      });
+
+      // delete social book
+      await SocialBook.destroy({
+        where: { projectId },
+      });
+
+      // delete discussion
+      let d = await Discussion.destroy({
+        where: { projectId },
+      });
+
+      return {
+        data: deleteProject,
+        error: null,
+        message: "SUCCESS",
+        statusCode: 200,
+      };
+    } else {
+      await Blog.destroy({
+        where: { id: findBlog.dataValues.id },
+      });
+      await BlogTopic.destroy({
+        where: { id: findBlog.dataValues.topicId },
+      });
+      await BlogImage.destroy({
+        where: { id: findBlog.dataValues.imageSizeId },
+      });
+      await BlogUpload.destroy({
+        where: { id: findBlog.dataValues.uploadId },
+      });
+
+      // delete fourm
+      await Fourm.destroy({
+        where: { projectId },
+      });
+
+      // delete seo audit
+      await SeoAudit.destroy({
+        where: { projectId },
+      });
+
+      // delete social book
+      await SocialBook.destroy({
+        where: { projectId },
+      });
+
+      // delete social media
+      await SocialMediaTable.findOne({
+        where: { projectId },
+      });
+      console.log("log8");
+      // delete discussion
+      let deleteDiscussion = await Discussion.destroy({
+        where: { projectId },
+      });
+
+      return {
+        data: deleteProject,
+        error: null,
+        message: "SUCCESS",
+        statusCode: 200,
+      };
+    }
   } catch (error) {
     res.status(500).send(error.message);
   }

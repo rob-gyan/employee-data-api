@@ -1,8 +1,5 @@
 let db = require("../../../models");
-let s3 = require("../../../aws_Bucket/upload/s3");
-const fs = require("fs");
-// console.log(s3);
-// console.log(fs);
+
 const Backlink = db.backlinks;
 const Category = db.categories;
 const Keyword = db.keywords;
@@ -42,17 +39,6 @@ exports.backlinkCreate = async (req) => {
         statusCode: 400,
       };
     }
-
-    // let image = req.files.url;
-    // const ab = fs.readFileSync(image.tempFilePath);
-    // console.log(ab);
-    // let uploadMeta = await s3.uploadFile({
-    //   Key: `${uuid()}-${Date.now()}`,
-    //   ContentType: image.mimetype,
-    //   Body: ab,
-    //   // Body: image.tempFilePath,
-    // });
-    // console.log(uploadMeta);
 
     // find project
     let projectFind = await Project.findOne({

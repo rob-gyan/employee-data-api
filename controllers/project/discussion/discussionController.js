@@ -1,4 +1,7 @@
 let db = require("../../../models");
+const { uuid } = require("uuidv4");
+let s3 = require("../../../aws_Bucket/upload/s3");
+const fs = require("fs");
 
 const Discussion = db.discussions;
 const User = db.users;
@@ -47,23 +50,52 @@ exports.discussionCreate = async (req) => {
         statusCode: 400,
       };
     }
+    if (req.files == null) {
+      // create Discussion
+      var discussionCreate = await Discussion.create({
+        message,
+        userId,
+        projectId,
+        userEmailId,
+        taskType,
+        taskTypeId,
+      });
 
-    // create Discussion
-    var discussionCreate = await Discussion.create({
-      message,
-      userId,
-      projectId,
-      userEmailId,
-      taskType,
-      taskTypeId,
-    });
+      return {
+        data: discussionCreate,
+        error: null,
+        message: "SUCCESS",
+        statusCode: 200,
+      };
+    } else {
+      // upload image in aws bucket
+      let image = req.files.imageUrl;
+      const ab = fs.readFileSync(image.tempFilePath);
+      let uploadMeta = await s3.uploadFile({
+        Key: `${uuid()}-${Date.now()}`,
+        ContentType: image.mimetype,
+        Body: fs.readFileSync(image.tempFilePath),
+      });
+      const imageUrl = uploadMeta.key;
 
-    return {
-      data: discussionCreate,
-      error: null,
-      message: "SUCCESS",
-      statusCode: 200,
-    };
+      // create Discussion
+      var discussionCreate = await Discussion.create({
+        message,
+        imageUrl,
+        userId,
+        projectId,
+        userEmailId,
+        taskType,
+        taskTypeId,
+      });
+
+      return {
+        data: discussionCreate,
+        error: null,
+        message: "SUCCESS",
+        statusCode: 200,
+      };
+    }
   } catch (error) {
     res.status(500).send(error.message);
   }

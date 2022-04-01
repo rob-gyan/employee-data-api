@@ -3,6 +3,9 @@ module.exports = (sequelize, Sequelize) => {
     message: {
       type: Sequelize.TEXT,
     },
+    imageUrl: {
+      type: Sequelize.TEXT,
+    },
     userId: {
       type: Sequelize.TEXT,
     },

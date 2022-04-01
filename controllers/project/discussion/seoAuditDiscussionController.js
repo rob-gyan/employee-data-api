@@ -24,7 +24,7 @@ exports.seoAuditDiscussionCreate = async (req) => {
         statusCode: 400,
       };
     }
-    // console.log(req.body);
+
     // find user
     let userFind = await User.findOne({
       where: { id: userId },
@@ -53,23 +53,51 @@ exports.seoAuditDiscussionCreate = async (req) => {
         statusCode: 400,
       };
     }
+    if (req.files == null) {
+      // create seoAuditDiscussion
+      var seoAuditDiscussionCreate = await SeoAuditDiscussion.create({
+        message,
+        userId,
+        projectId,
+        userEmailId,
+        taskType,
+        seoAuditQuestion,
+      });
 
-    // create seoAuditDiscussion
-    var seoAuditDiscussionCreate = await SeoAuditDiscussion.create({
-      message,
-      userId,
-      projectId,
-      userEmailId,
-      taskType,
-      seoAuditQuestion,
-    });
+      return {
+        data: seoAuditDiscussionCreate,
+        error: null,
+        message: "SUCCESS",
+        statusCode: 200,
+      };
+    } else {
+      let image = req.files.imageUrl;
+      const ab = fs.readFileSync(image.tempFilePath);
+      let uploadMeta = await s3.uploadFile({
+        Key: `${uuid()}-${Date.now()}`,
+        ContentType: image.mimetype,
+        Body: fs.readFileSync(image.tempFilePath),
+      });
+      const imageUrl = uploadMeta.key;
 
-    return {
-      data: seoAuditDiscussionCreate,
-      error: null,
-      message: "SUCCESS",
-      statusCode: 200,
-    };
+      // create seoAuditDiscussion
+      var seoAuditDiscussionCreate = await SeoAuditDiscussion.create({
+        message,
+        imageUrl,
+        userId,
+        projectId,
+        userEmailId,
+        taskType,
+        seoAuditQuestion,
+      });
+
+      return {
+        data: seoAuditDiscussionCreate,
+        error: null,
+        message: "SUCCESS",
+        statusCode: 200,
+      };
+    }
   } catch (error) {
     res.status(500).send(error.message);
   }

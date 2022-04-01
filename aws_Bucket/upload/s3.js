@@ -49,10 +49,3 @@ exports.downloadFile = async (options, res) => {
     res.end(null, "binary");
   });
 };
-
-// const promiseS3 = await uploadFile({
-//     Bucket: process.env.AWS_S3_AUDIO_BUCKET,
-//     Key: `raw/${provider.length > 0 ? provider : 'gotoconnect'}-${uuid()}`,
-//     ContentType: mime,
-//     Body: _buffer,
-//   })
