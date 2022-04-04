@@ -15,6 +15,7 @@ const Type = db.types;
 exports.socialMediaCreate = async (req) => {
   try {
     let {
+      fileRichText,
       postContent,
       postContentType,
       postContentAssignee,
@@ -159,6 +160,7 @@ exports.socialMediaCreate = async (req) => {
 
     // create socialMedia
     var socialMedia = await SocialMediaTable.create({
+      fileRichText,
       postContentId,
       mediaId,
       postId,
@@ -183,6 +185,7 @@ exports.socialMediaCreate = async (req) => {
 exports.socialMediaUpdate = async (req) => {
   try {
     let {
+      fileRichText,
       socialMediaId,
       projectId,
       postContent,
@@ -242,7 +245,7 @@ exports.socialMediaUpdate = async (req) => {
         statusCode: 400,
       };
     }
-
+    await socialMediaFind.update({ fileRichText });
     // find socialMedia postcontent
     let socialMediaContentFind = await SocialMediaContent.findOne({
       where: { id: socialMediaFind.dataValues.postContentId },
@@ -416,6 +419,7 @@ exports.getAllSocialMedia = async (req) => {
         // console.log(allSocialMediaPost.id);
         allSocialMedia.push({
           id: ele.id,
+          fileRichText: ele.fileRichText,
           postContent: allSocialMediaPostContent.postContent,
           postContentType: allSocialMediaPostContent.postContentType,
           postContentAssignee: allSocialMediaPostContent.postContentAssignee,

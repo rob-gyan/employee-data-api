@@ -538,232 +538,48 @@ exports.deleteProject = async (req) => {
   }
 };
 
-// get all keyword
-exports.getAllKeyword = async (req) => {
-  try {
-    const { projectId } = req.body;
-    var allKeyword = await Keyword.findAll({ where: { projectId } });
-    return {
-      data: allKeyword,
-      error: null,
-      message: "success",
-      statusCode: 200,
-    };
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
-};
-
-// get all category
-exports.getAllCategory = async (req) => {
-  try {
-    var allCategory = await Category.findAll();
-    return {
-      data: allCategory,
-      error: null,
-      message: "success",
-      statusCode: 200,
-    };
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
-};
-
-// get all profile
-exports.getAllProfile = async (req) => {
-  try {
-    var allProfile = await Profile.findAll();
-    return {
-      data: allProfile,
-      error: null,
-      message: "success",
-      statusCode: 200,
-    };
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
-};
-// get all type
-exports.getAllType = async (req) => {
-  try {
-    var allType = await Type.findAll();
-    return {
-      data: allType,
-      error: null,
-      message: "success",
-      statusCode: 200,
-    };
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
-};
-// get all url
-exports.getAllUrl = async (req) => {
-  try {
-    var allUrl = await Url.findAll();
-    return {
-      data: allUrl,
-      error: null,
-      message: "success",
-      statusCode: 200,
-    };
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
-};
-
-// get all website
-exports.getAllWebsite = async (req) => {
-  try {
-    var allWebsite = await Website.findAll();
-    return {
-      data: allWebsite,
-      error: null,
-      message: "success",
-      statusCode: 200,
-    };
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
-};
-// get all imagesize
-exports.getAllImageSize = async (req) => {
-  try {
-    var allImageSize = await ImageSize.findAll();
-    return {
-      data: allImageSize,
-      error: null,
-      message: "success",
-      statusCode: 200,
-    };
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
-};
-// get all upload
-exports.getAllUpload = async (req) => {
-  try {
-    var allUpload = await Upload.findAll();
-    return {
-      data: allUpload,
-      error: null,
-      message: "success",
-      statusCode: 200,
-    };
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
-};
-
-// get all UrlBlog
-exports.getAllUrlBlog = async (req) => {
-  const { projectId } = req.body;
-  try {
-    var allUrlBlog = await UrlBlog.findAll({ where: { projectId } });
-
-    return {
-      data: allUrlBlog,
-      error: null,
-      message: "success",
-      statusCode: 200,
-    };
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
-};
-// get all social tags
-exports.getAllSocialTag = async (req) => {
-  const { projectId } = req.body;
-  try {
-    var allSocialTag = await SocialTag.findAll({
-      where: { projectId },
-    });
-
-    return {
-      data: allSocialTag,
-      error: null,
-      message: "success",
-      statusCode: 200,
-    };
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
-};
-
-// get all plateform
-exports.getAllPlateform = async (req) => {
-  try {
-    var allPlateform = await Plateform.findAll();
-
-    return {
-      data: allPlateform,
-      error: null,
-      message: "success",
-      statusCode: 200,
-    };
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
-};
-
-// get all posts
-exports.getAllpost = async (req) => {
-  try {
-    var allPost = await Post.findAll();
-
-    return {
-      data: allPost,
-      error: null,
-      message: "success",
-      statusCode: 200,
-    };
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
-};
-
-// get all media
-exports.getAllMedia = async (req) => {
-  try {
-    var allMedia = await Media.findAll();
-
-    return {
-      data: allMedia,
-      error: null,
-      message: "success",
-      statusCode: 200,
-    };
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
-};
-
-// get all additional image
-exports.getAllAdditionalImage = async (req) => {
-  try {
-    var allAdditionalImage = await AdditionalImage.findAll();
-
-    return {
-      data: allAdditionalImage,
-      error: null,
-      message: "success",
-      statusCode: 200,
-    };
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
-};
-
 // get all general fields
 exports.getAllGeneralField = async (req) => {
   const { projectId } = req.body;
   try {
-    var allGeneralField = await SocialTag.findAll({
+    var socialtags = await SocialTag.findAll({
       where: { projectId },
     });
+    var allKeyword = await Keyword.findAll({ where: { projectId } });
+    var allCategory = await Category.findAll();
+    var allProfile = await Profile.findAll();
+    var allType = await Type.findAll();
+    var allUrl = await Url.findAll();
+    var allWebsite = await Website.findAll();
+    var allImageSize = await ImageSize.findAll();
+    var allUpload = await Upload.findAll();
+    var allUrlBlog = await UrlBlog.findAll({ where: { projectId } });
+    var allSocialTag = await SocialTag.findAll({
+      where: { projectId },
+    });
+    var allPlateform = await Plateform.findAll();
+    var allPost = await Post.findAll();
+    var allMedia = await Media.findAll();
+    var allAdditionalImage = await AdditionalImage.findAll();
 
     return {
-      data: allGeneralField,
+      data: {
+        allSocialTags: socialtags,
+        allKeyword: allKeyword,
+        allCategory,
+        allProfile,
+        allType,
+        allUrl,
+        allWebsite,
+        allImageSize,
+        allUpload,
+        allUrlBlog,
+        allSocialTag,
+        allPlateform,
+        allPost,
+        allMedia,
+        allAdditionalImage,
+      },
       error: null,
       message: "success",
       statusCode: 200,

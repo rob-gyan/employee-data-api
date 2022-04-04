@@ -3,6 +3,9 @@ module.exports = (sequelize, Sequelize) => {
     topicId: {
       type: Sequelize.TEXT,
     },
+    fileRichText: {
+      type: Sequelize.TEXT,
+    },
     imageSizeId: {
       type: Sequelize.TEXT,
     },

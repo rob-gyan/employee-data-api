@@ -13,6 +13,7 @@ const Upload = db.uploads;
 exports.blogCreate = async (req) => {
   try {
     let {
+      fileRichText,
       topic,
       topicWebsite,
       topicAssignee,
@@ -136,6 +137,7 @@ exports.blogCreate = async (req) => {
 
     // create blog
     var blogCreate = await Blog.create({
+      fileRichText,
       topicId,
       imageSizeId,
       uploadId,
@@ -163,6 +165,7 @@ exports.blogUpdate = async (req) => {
       blogId,
       projectId,
       topic,
+      fileRichText,
       topicWebsite,
       topicAssignee,
       topicStartDate,
@@ -212,6 +215,8 @@ exports.blogUpdate = async (req) => {
         statusCode: 400,
       };
     }
+
+    await blogFind.update({ fileRichText });
 
     // find blog Topic
     let blogTopicFind = await BlogTopic.findOne({
@@ -364,6 +369,7 @@ exports.getAllBlogs = async (req) => {
 
         allBlog.push({
           id: ele.id,
+          fileRichText: ele.fileRichText,
           projectId: ele.projectId,
           projectName: ele.projectName,
           topic: allBlogTopic.topic,
@@ -452,6 +458,7 @@ exports.getBlogById = async (req) => {
         id: ele.id,
         projectId: ele.projectId,
         projectName: ele.projectName,
+        fileRichText: ele.fileRichText,
         topic: allBlogTopic.topic,
         topicWebsite: allBlogTopic.topicWebsite,
         topicStatus: allBlogTopic.topicStatus,

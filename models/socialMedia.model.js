@@ -1,5 +1,8 @@
 module.exports = (sequelize, Sequelize) => {
   const SocialMediaTable = sequelize.define("socialmediatables", {
+    fileRichText: {
+      type: Sequelize.TEXT,
+    },
     postContentId: {
       type: Sequelize.TEXT,
     },
