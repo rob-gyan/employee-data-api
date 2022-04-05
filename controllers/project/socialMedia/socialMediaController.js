@@ -526,6 +526,7 @@ exports.getSocialMediaById = async (req) => {
       // console.log(allSocialMediaPost.id);
       socialMediaById.push({
         id: ele.id,
+        fileRichText: ele.fileRichText,
         postContent: allSocialMediaPostContent.postContent,
         postContentType: allSocialMediaPostContent.postContentType,
         postContentAssignee: allSocialMediaPostContent.postContentAssignee,
