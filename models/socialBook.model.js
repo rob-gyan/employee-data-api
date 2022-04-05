@@ -20,7 +20,7 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.TEXT,
     },
     timeEstimation: {
-      type: Sequelize.TIME,
+      type: Sequelize.TEXT,
     },
     status: {
       type: Sequelize.TEXT,

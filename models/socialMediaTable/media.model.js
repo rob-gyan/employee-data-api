@@ -13,10 +13,10 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.TEXT,
     },
     mediaStartDate: {
-      type: Sequelize.DATE,
+      type: Sequelize.TEXT,
     },
     mediaDueDate: {
-      type: Sequelize.DATE,
+      type: Sequelize.TEXT,
     },
     projectId: {
       type: Sequelize.TEXT,

@@ -537,6 +537,33 @@ exports.deleteProject = async (req) => {
     res.status(500).send(error.message);
   }
 };
+// **********delete project api by id controller**********
+exports.deleteKeyword = async (req) => {
+  try {
+    let { keywordId } = req.body;
+    let deleteKeyword = await Keyword.destroy({
+      where: { id: keywordId },
+    });
+
+    // if project doesn't exist
+    if (deleteKeyword == 0) {
+      return {
+        data: null,
+        error: "project doesn't exist",
+        message: "Failed",
+        statusCode: 400,
+      };
+    }
+    return {
+      data: deleteKeyword,
+      error: null,
+      message: "SUCCESS",
+      statusCode: 200,
+    };
+  } catch (err) {
+    console.warn("something went wrong");
+  }
+};
 
 // get all general fields
 exports.getAllGeneralField = async (req) => {

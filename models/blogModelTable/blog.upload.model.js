@@ -4,7 +4,7 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.TEXT,
     },
     uploadImageWithBlog: {
-      type: Sequelize.BOOLEAN,
+      type: Sequelize.TEXT,
     },
     uploadAssignee: {
       type: Sequelize.TEXT,
