@@ -4,6 +4,7 @@ const { check, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const config = require("../../config");
 var router = express.Router();
+const auth = require("../../middleware/auth");
 
 // *********signup api*********
 router.post(
@@ -67,7 +68,7 @@ router.post(
     }
   }
 );
-router.get("/getAllUser", async (req, res) => {
+router.get("/getAllUser", auth, async (req, res) => {
   try {
     let getAllUser = await userController.getAllUser(req);
     res.status(200).send(getAllUser);
@@ -75,7 +76,7 @@ router.get("/getAllUser", async (req, res) => {
     res.status(500).send(error);
   }
 });
-router.post("/twofaVerify", async (req, res) => {
+router.post("/twofaVerify", auth, async (req, res) => {
   try {
     let deleteProject = await userController.twofaVerify(req);
     let code = deleteProject.statusCode;
@@ -85,7 +86,7 @@ router.post("/twofaVerify", async (req, res) => {
     res.status(500).send(error);
   }
 });
-router.post("/twofacreate", async (req, res) => {
+router.post("/twofacreate", auth, async (req, res) => {
   try {
     let deleteProject = await userController.twofaCreate(req);
     let code = deleteProject.statusCode;
@@ -97,7 +98,7 @@ router.post("/twofacreate", async (req, res) => {
 });
 
 // check twoFA
-router.post("/checkTwoFA", async (req, res) => {
+router.post("/checkTwoFA", auth, async (req, res) => {
   try {
     let checkTwoFA = await userController.checkTwoFA(req);
     let code = checkTwoFA.statusCode;
@@ -110,7 +111,7 @@ router.post("/checkTwoFA", async (req, res) => {
 });
 
 // make checktwoFA false
-router.post("/makeFalseCheckTwoFA", async (req, res) => {
+router.post("/makeFalseCheckTwoFA", auth, async (req, res) => {
   try {
     let makeFalseCheckTwoFA = await userController.makeFalseCheckTwoFA(req);
     let code = makeFalseCheckTwoFA.statusCode;
@@ -123,7 +124,7 @@ router.post("/makeFalseCheckTwoFA", async (req, res) => {
 });
 
 // verify token with user
-router.post("/verifyToken", async (req, res) => {
+router.post("/verifyToken", auth, async (req, res) => {
   try {
     let verifyToken = await userController.verifyToken(req);
     let code = verifyToken.statusCode;

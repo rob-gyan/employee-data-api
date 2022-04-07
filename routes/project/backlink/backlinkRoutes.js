@@ -1,9 +1,10 @@
 var express = require("express");
 var backlinkController = require("../../../controllers/project/backlink/backlinkController");
 var router = express.Router();
+var auth = require("../../../middleware/auth");
 
 // *********create backlink api*********
-router.post("/createBacklink", async (req, res) => {
+router.post("/createBacklink", auth, async (req, res) => {
   try {
     let createBacklink = await backlinkController.backlinkCreate(req);
     let code = createBacklink.statusCode;
@@ -15,7 +16,7 @@ router.post("/createBacklink", async (req, res) => {
 });
 
 // *********update backlink api*********
-router.patch("/updateBacklink", async (req, res) => {
+router.patch("/updateBacklink", auth, async (req, res) => {
   try {
     let createBacklink = await backlinkController.backlinkUpdate(req);
     let code = createBacklink.statusCode;
@@ -27,7 +28,7 @@ router.patch("/updateBacklink", async (req, res) => {
 });
 
 // *********update backlink Status api*********
-router.put("/updateBacklinkStatus", async (req, res) => {
+router.put("/updateBacklinkStatus", auth, async (req, res) => {
   try {
     let createBacklinkStatus = await backlinkController.backlinkUpdateStatus(
       req
@@ -41,7 +42,7 @@ router.put("/updateBacklinkStatus", async (req, res) => {
 });
 
 // *********update backlink time api*********
-router.put("/updateBacklinkTime", async (req, res) => {
+router.put("/updateBacklinkTime", auth, async (req, res) => {
   try {
     let createBacklinkTime = await backlinkController.backlinkUpdateTime(req);
     let code = createBacklinkTime.statusCode;
@@ -53,7 +54,7 @@ router.put("/updateBacklinkTime", async (req, res) => {
 });
 
 // *********get all backlink api*********
-router.post("/getAllBacklinkByProjectId", async (req, res) => {
+router.post("/getAllBacklinkByProjectId", auth, async (req, res) => {
   try {
     let getAllBacklink = await backlinkController.getAllBacklink(req);
     let code = getAllBacklink.statusCode;
@@ -65,7 +66,7 @@ router.post("/getAllBacklinkByProjectId", async (req, res) => {
 });
 
 // *********delete backlink by id api*********
-router.delete("/deleteBacklink", async (req, res) => {
+router.delete("/deleteBacklink", auth, async (req, res) => {
   try {
     let deleteBacklink = await backlinkController.deleteBacklink(req);
     let code = deleteBacklink.statusCode;
@@ -77,7 +78,7 @@ router.delete("/deleteBacklink", async (req, res) => {
 });
 
 // *********get Backlink Task By Id backlink by id api*********
-router.post("/getBacklinkTaskById", async (req, res) => {
+router.post("/getBacklinkTaskById", auth, async (req, res) => {
   try {
     let getBacklinkTask = await backlinkController.getBacklinkTask(req);
     let code = getBacklinkTask.statusCode;
@@ -89,7 +90,7 @@ router.post("/getBacklinkTaskById", async (req, res) => {
 });
 
 // *********test backlink api*********
-router.post("/testBacklink", async (req, res) => {
+router.post("/testBacklink", auth, async (req, res) => {
   try {
     let deleteBacklink = await backlinkController.testBacklink(req);
     let code = deleteBacklink.statusCode;

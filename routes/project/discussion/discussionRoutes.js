@@ -2,9 +2,10 @@ var express = require("express");
 var discussionController = require("../../../controllers/project/discussion/discussionController");
 var seoAuditDiscussionController = require("../../../controllers/project/discussion/seoAuditDiscussionController");
 var router = express.Router();
+var auth = require("../../../middleware/auth");
 
 // *********create discussion api*********
-router.post("/createDiscussion", async (req, res) => {
+router.post("/createDiscussion", auth, async (req, res) => {
   try {
     let createDiscussion = await discussionController.discussionCreate(req);
     let code = createDiscussion.statusCode;
@@ -16,7 +17,7 @@ router.post("/createDiscussion", async (req, res) => {
 });
 
 // *********update Discussion api*********
-router.patch("/updateDiscussion", async (req, res) => {
+router.patch("/updateDiscussion", auth, async (req, res) => {
   try {
     let createDiscussion = await discussionController.discussionUpdate(req);
     let code = createDiscussion.statusCode;
@@ -28,7 +29,7 @@ router.patch("/updateDiscussion", async (req, res) => {
 });
 
 // *********get all Discussion api*********
-router.post("/getAllDiscussion", async (req, res) => {
+router.post("/getAllDiscussion", auth, async (req, res) => {
   try {
     let getAllDiscussion = await discussionController.getAllDiscussions(req);
     let code = getAllDiscussion.statusCode;
@@ -40,7 +41,7 @@ router.post("/getAllDiscussion", async (req, res) => {
 });
 
 // *********delete Discussion by id api*********
-router.delete("/deleteDiscussion", async (req, res) => {
+router.delete("/deleteDiscussion", auth, async (req, res) => {
   try {
     let deleteDiscussion = await discussionController.deleteDiscussion(req);
     let code = deleteDiscussion.statusCode;
@@ -55,7 +56,7 @@ module.exports = router;
 
 // ******************seo Audit discussion****************
 // *********create seo Audit discussion api*********
-router.post("/createSeoAuditDiscussion", async (req, res) => {
+router.post("/createSeoAuditDiscussion", auth, async (req, res) => {
   try {
     let createDiscussion =
       await seoAuditDiscussionController.seoAuditDiscussionCreate(req);
@@ -68,7 +69,7 @@ router.post("/createSeoAuditDiscussion", async (req, res) => {
 });
 
 // *********get all seo audit Discussion api*********
-router.post("/getAllSeoAuditDiscussion", async (req, res) => {
+router.post("/getAllSeoAuditDiscussion", auth, async (req, res) => {
   try {
     let getAllDiscussion =
       await seoAuditDiscussionController.getAllseoAuditDiscussions(req);

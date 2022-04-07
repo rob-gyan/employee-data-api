@@ -4,7 +4,7 @@ var router = express.Router();
 const auth = require("../../../middleware/auth");
 
 // *********create fourm api*********
-router.post("/createFourm", async (req, res) => {
+router.post("/createFourm", auth, async (req, res) => {
   try {
     let createFourm = await fourmController.fourmCreate(req);
     let code = createFourm.statusCode;
@@ -17,7 +17,7 @@ router.post("/createFourm", async (req, res) => {
 });
 
 // *********update fourm api*********
-router.patch("/updateFourm", async (req, res) => {
+router.patch("/updateFourm", auth, async (req, res) => {
   try {
     let createFourm = await fourmController.fourmUpdate(req);
     let code = createFourm.statusCode;
@@ -30,7 +30,7 @@ router.patch("/updateFourm", async (req, res) => {
 });
 
 // *********get all fourm on the basis of projectId api*********
-router.post("/getAllFourm", async (req, res) => {
+router.post("/getAllFourm", auth, async (req, res) => {
   try {
     let getAllFourm = await fourmController.getAllFourms(req);
     let code = getAllFourm.statusCode;
@@ -43,7 +43,7 @@ router.post("/getAllFourm", async (req, res) => {
 });
 
 // *********get all fourm on the basis of projectId and fourm Id api*********
-router.post("/getFourmById", async (req, res) => {
+router.post("/getFourmById", auth, async (req, res) => {
   try {
     let getFourmById = await fourmController.getFourmById(req);
     let code = getFourmById.statusCode;
@@ -56,7 +56,7 @@ router.post("/getFourmById", async (req, res) => {
 });
 
 // *********update fourm Status api*********
-router.put("/updateFourmStatus", async (req, res) => {
+router.put("/updateFourmStatus", auth, async (req, res) => {
   try {
     let createFourmStatus = await fourmController.fourmUpdateStatus(req);
     let code = createFourmStatus.statusCode;
@@ -68,7 +68,7 @@ router.put("/updateFourmStatus", async (req, res) => {
 });
 
 // *********update fourm time api*********
-router.put("/updateFourmTime", async (req, res) => {
+router.put("/updateFourmTime", auth, async (req, res) => {
   try {
     let createFourmTime = await fourmController.fourmUpdateTime(req);
     let code = createFourmTime.statusCode;
@@ -80,7 +80,7 @@ router.put("/updateFourmTime", async (req, res) => {
 });
 
 // *********delete fourm by id api*********
-router.delete("/deleteFourm", async (req, res) => {
+router.delete("/deleteFourm", auth, async (req, res) => {
   try {
     let deleteFourm = await fourmController.deleteFourm(req);
     let code = deleteFourm.statusCode;

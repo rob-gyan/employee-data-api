@@ -1,9 +1,10 @@
 var express = require("express");
 var blogsController = require("../../../controllers/project/blogs/blogsController");
 var router = express.Router();
+var auth = require("../../../middleware/auth");
 
 // *********create Blog api*********
-router.post("/createBlog", async (req, res, next) => {
+router.post("/createBlog", auth, async (req, res, next) => {
   try {
     let createBlog = await blogsController.blogCreate(req);
     let code = createBlog.statusCode;
@@ -15,7 +16,7 @@ router.post("/createBlog", async (req, res, next) => {
 });
 
 // *********update blog api*********
-router.patch("/updateBlog", async (req, res) => {
+router.patch("/updateBlog", auth, async (req, res) => {
   try {
     let createBlog = await blogsController.blogUpdate(req);
     let code = createBlog.statusCode;
@@ -27,7 +28,7 @@ router.patch("/updateBlog", async (req, res) => {
 });
 
 // *********get all blog api*********
-router.post("/getAllBlog", async (req, res) => {
+router.post("/getAllBlog", auth, async (req, res) => {
   try {
     let getAllBlog = await blogsController.getAllBlogs(req);
     let code = getAllBlog.statusCode;
@@ -39,7 +40,7 @@ router.post("/getAllBlog", async (req, res) => {
 });
 
 // *********get blog by id api*********
-router.post("/getBlogById", async (req, res) => {
+router.post("/getBlogById", auth, async (req, res) => {
   try {
     let getBlogById = await blogsController.getBlogById(req);
     let code = getBlogById.statusCode;
@@ -51,7 +52,7 @@ router.post("/getBlogById", async (req, res) => {
 });
 
 // *********delete Blog by id api*********
-router.delete("/deleteBlog", async (req, res) => {
+router.delete("/deleteBlog", auth, async (req, res) => {
   try {
     let deleteBlog = await blogsController.deleteBlog(req);
     let code = deleteBlog.statusCode;

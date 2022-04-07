@@ -1,9 +1,10 @@
 var express = require("express");
 var socialMediaController = require("../../../controllers/project/socialMedia/socialMediaController");
 var router = express.Router();
+const auth = require("../../../middleware/auth");
 
 // *********create Socialmedia api*********
-router.post("/createSocialMedia", async (req, res) => {
+router.post("/createSocialMedia", auth, async (req, res) => {
   try {
     let createSocialMedia = await socialMediaController.socialMediaCreate(req);
     let code = createSocialMedia.statusCode;
@@ -16,7 +17,7 @@ router.post("/createSocialMedia", async (req, res) => {
 });
 
 // *********update SocialMedia api*********
-router.patch("/updateSocialMedia", async (req, res) => {
+router.patch("/updateSocialMedia", auth, async (req, res) => {
   try {
     let createSocialMedia = await socialMediaController.socialMediaUpdate(req);
     let code = createSocialMedia.statusCode;
@@ -29,7 +30,7 @@ router.patch("/updateSocialMedia", async (req, res) => {
 });
 
 // *********get all social media api*********
-router.post("/getAllSocialMedia", async (req, res) => {
+router.post("/getAllSocialMedia", auth, async (req, res) => {
   try {
     let getAllSocialMedia = await socialMediaController.getAllSocialMedia(req);
     let code = getAllSocialMedia.statusCode;
@@ -41,7 +42,7 @@ router.post("/getAllSocialMedia", async (req, res) => {
 });
 
 // *********get SocialMedia by id api*********
-router.post("/socialMediaById", async (req, res) => {
+router.post("/socialMediaById", auth, async (req, res) => {
   try {
     let getSocialMediaById = await socialMediaController.getSocialMediaById(
       req
@@ -55,7 +56,7 @@ router.post("/socialMediaById", async (req, res) => {
 });
 
 // *********delete SocialMedia by id api*********
-router.delete("/deleteSocialMedia", async (req, res) => {
+router.delete("/deleteSocialMedia", auth, async (req, res) => {
   try {
     let deleteSocialMedia = await socialMediaController.deleteSocialMedia(req);
     let code = deleteSocialMedia.statusCode;

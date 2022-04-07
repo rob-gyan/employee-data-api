@@ -4,7 +4,7 @@ var router = express.Router();
 const auth = require("../../../middleware/auth");
 
 // *********create SocialBook api*********
-router.post("/createSocialBook", async (req, res) => {
+router.post("/createSocialBook", auth, async (req, res) => {
   try {
     let createSocialBook = await socialBookController.socialBookCreate(req);
     let code = createSocialBook.statusCode;
@@ -16,7 +16,7 @@ router.post("/createSocialBook", async (req, res) => {
 });
 
 // *********update SocialBook api*********
-router.patch("/updateSocialBook", async (req, res) => {
+router.patch("/updateSocialBook", auth, async (req, res) => {
   try {
     let createSocialBook = await socialBookController.socialBookUpdate(req);
     let code = createSocialBook.statusCode;
@@ -28,7 +28,7 @@ router.patch("/updateSocialBook", async (req, res) => {
 });
 
 // *********get all SocialBook api*********
-router.post("/getAllSocialBook", async (req, res) => {
+router.post("/getAllSocialBook", auth, async (req, res) => {
   try {
     let getAllSocialBook = await socialBookController.getAllSocialBook(req);
     let code = getAllSocialBook.statusCode;
@@ -40,7 +40,7 @@ router.post("/getAllSocialBook", async (req, res) => {
 });
 
 // *********update SocialBook Status api*********
-router.put("/updateSocialBookStatus", async (req, res) => {
+router.put("/updateSocialBookStatus", auth, async (req, res) => {
   try {
     let createSocialBookStatus =
       await socialBookController.socialBookUpdateStatus(req);
@@ -53,7 +53,7 @@ router.put("/updateSocialBookStatus", async (req, res) => {
 });
 
 // *********update socialBook time api*********
-router.put("/updateSocialBookTime", async (req, res) => {
+router.put("/updateSocialBookTime", auth, async (req, res) => {
   try {
     let createSocialBookTime = await socialBookController.socialBookUpdateTime(
       req
@@ -67,7 +67,7 @@ router.put("/updateSocialBookTime", async (req, res) => {
 });
 
 // *********get SocialBook's Task By Id backlink by id api*********
-router.post("/getSocialBookTaskById", async (req, res) => {
+router.post("/getSocialBookTaskById", auth, async (req, res) => {
   try {
     let getSocialBookTask = await socialBookController.getSocialBookTask(req);
     let code = getSocialBookTask.statusCode;
@@ -79,7 +79,7 @@ router.post("/getSocialBookTaskById", async (req, res) => {
 });
 
 // *********delete SocialBook by id api*********
-router.delete("/deleteSocialBook", async (req, res) => {
+router.delete("/deleteSocialBook", auth, async (req, res) => {
   try {
     let deleteSocialBook = await socialBookController.deleteSocialBook(req);
     let code = deleteSocialBook.statusCode;

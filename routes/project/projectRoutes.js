@@ -17,7 +17,7 @@ router.post("/createProject", auth, async (req, res) => {
 });
 
 // *********update project api*********
-router.post("/updateProject", async (req, res) => {
+router.post("/updateProject", auth, async (req, res) => {
   try {
     let createProject = await projectController.projectUpdate(req);
     let code = createProject.statusCode;
@@ -30,7 +30,7 @@ router.post("/updateProject", async (req, res) => {
 });
 
 // *********update project status api*********
-router.post("/updateProjectStatus", async (req, res) => {
+router.post("/updateProjectStatus", auth, async (req, res) => {
   try {
     let createProject = await projectController.projectUpdateStatus(req);
     let code = createProject.statusCode;
@@ -43,7 +43,7 @@ router.post("/updateProjectStatus", async (req, res) => {
 });
 
 // *********get all project api*********
-router.get("/getAllProject", async (req, res) => {
+router.get("/getAllProject", auth, async (req, res) => {
   try {
     let getProjects = await projectController.getAllProject(req);
     let code = getProjects.statusCode;
@@ -56,7 +56,7 @@ router.get("/getAllProject", async (req, res) => {
 });
 
 // *********get all project task api*********
-router.get("/getAllProjectTask", async (req, res) => {
+router.get("/getAllProjectTask", auth, async (req, res) => {
   try {
     let getProjects = await projectController.getAllProjectTask(req);
     let code = getProjects.statusCode;
@@ -69,7 +69,7 @@ router.get("/getAllProjectTask", async (req, res) => {
 });
 
 // *********get All Project Task By ProjectId backlink by id api*********
-router.post("/getAllProjectTaskByProjectId", async (req, res) => {
+router.post("/getAllProjectTaskByProjectId", auth, async (req, res) => {
   try {
     let getAllProjectTask = await projectController.getAllProjectTaskById(req);
     let code = getAllProjectTask.statusCode;
@@ -81,7 +81,7 @@ router.post("/getAllProjectTaskByProjectId", async (req, res) => {
 });
 
 // *********get  project by id api*********
-router.post("/getProjectById", async (req, res) => {
+router.post("/getProjectById", auth, async (req, res) => {
   try {
     let getProject = await projectController.getProjectById(req);
     let code = getProject.statusCode;
@@ -94,7 +94,7 @@ router.post("/getProjectById", async (req, res) => {
 });
 
 // *********get all project task api*********
-router.post("/getHomeTask", async (req, res) => {
+router.post("/getHomeTask", auth, async (req, res) => {
   try {
     let getProjects = await projectController.getHomeTask(req);
     let code = getProjects.statusCode;
@@ -107,7 +107,7 @@ router.post("/getHomeTask", async (req, res) => {
 });
 
 // *********delete project by id api*********
-router.post("/deleteProject", async (req, res) => {
+router.post("/deleteProject", auth, async (req, res) => {
   try {
     let deleteProject = await projectController.deleteProject(req);
     let code = deleteProject.statusCode;
@@ -120,7 +120,7 @@ router.post("/deleteProject", async (req, res) => {
 });
 
 // delete key word on the basis of project id
-router.post("/deleteKeyword", async (req, res) => {
+router.post("/deleteKeyword", auth, async (req, res) => {
   try {
     let deleteKeyword = await projectController.deleteKeyword(req);
     res.status(200).send(deleteKeyword);
