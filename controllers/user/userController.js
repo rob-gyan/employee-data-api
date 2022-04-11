@@ -170,7 +170,6 @@ exports.twofaVerify = async (req) => {
       // update twoFA
       await changeTwoFA.update({
         twoFA: true,
-        verifyTwoFA: true,
       });
     }
 

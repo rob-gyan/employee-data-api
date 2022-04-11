@@ -76,7 +76,7 @@ router.get("/getAllUser", auth, async (req, res) => {
     res.status(500).send(error);
   }
 });
-router.post("/twofaVerify", auth, async (req, res) => {
+router.post("/twofaVerify", async (req, res) => {
   try {
     let deleteProject = await userController.twofaVerify(req);
     let code = deleteProject.statusCode;
@@ -86,7 +86,7 @@ router.post("/twofaVerify", auth, async (req, res) => {
     res.status(500).send(error);
   }
 });
-router.post("/twofacreate", auth, async (req, res) => {
+router.post("/twofacreate", async (req, res) => {
   try {
     let deleteProject = await userController.twofaCreate(req);
     let code = deleteProject.statusCode;
@@ -98,7 +98,7 @@ router.post("/twofacreate", auth, async (req, res) => {
 });
 
 // check twoFA
-router.post("/checkTwoFA", auth, async (req, res) => {
+router.post("/checkTwoFA", async (req, res) => {
   try {
     let checkTwoFA = await userController.checkTwoFA(req);
     let code = checkTwoFA.statusCode;
@@ -111,7 +111,7 @@ router.post("/checkTwoFA", auth, async (req, res) => {
 });
 
 // make checktwoFA false
-router.post("/makeFalseCheckTwoFA", auth, async (req, res) => {
+router.post("/makeFalseCheckTwoFA", async (req, res) => {
   try {
     let makeFalseCheckTwoFA = await userController.makeFalseCheckTwoFA(req);
     let code = makeFalseCheckTwoFA.statusCode;
