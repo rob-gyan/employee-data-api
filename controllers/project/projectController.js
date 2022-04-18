@@ -5,6 +5,7 @@ const SeoAudit = db.seoaudits;
 const SocialMediaTable = db.socialmediatables;
 const Discussion = db.discussions;
 const Blog = db.blogs;
+const SocialMedia = db.socialmediatables;
 const Fourm = db.fourms;
 const Backlink = db.backlinks;
 const SocialBook = db.socialbooks;
@@ -282,9 +283,29 @@ exports.getAllProjectTask = async (req) => {
         status: i.dataValues.status,
       });
     });
+    const newArray = [];
+    for (ele of allProjectTask) {
+      let allProject = await Project.findAll({ where: { id: ele.projectId } });
+
+      for (data of allProject) {
+        newArray.push({
+          id: ele.id,
+          taskType: ele.taskType,
+          projectId: ele.projectId,
+          projectName: ele.projectName,
+          assignee: ele.assignee,
+          dueDate: ele.dueDate,
+          status: ele.status,
+          createdAt: data.createdAt,
+          projectCreater: data.projectCreater,
+        });
+      }
+
+      // console.log(allProject);
+    }
 
     return {
-      data: allProjectTask,
+      data: newArray,
       error: null,
       message: "SUCCESS",
       statusCode: 200,
@@ -304,6 +325,7 @@ exports.getAllProjectTaskById = async (req) => {
     let allBlog = await Blog.findAll({ where: { projectId } });
     let allFourm = await Fourm.findAll({ where: { projectId } });
     let allSocialBook = await SocialBook.findAll({ where: { projectId } });
+    let allSocialMedia = await SocialMedia.findAll({ where: { projectId } });
 
     let allProjectTaskById = [];
     allBacklink.map((i) => {
@@ -349,6 +371,17 @@ exports.getAllProjectTaskById = async (req) => {
       });
     });
 
+    allSocialMedia.map((i) => {
+      allProjectTaskById.push({
+        id: i.dataValues.id,
+        taskType: i.dataValues.taskType,
+        projectId: i.dataValues.projectId,
+        projectName: i.dataValues.projectName,
+        dueDate: i.dataValues.dueDate,
+        status: i.dataValues.status,
+      });
+    });
+
     return {
       data: allProjectTaskById,
       error: null,
@@ -384,7 +417,13 @@ exports.getHomeTask = async (req) => {
       where: { id, projectId, taskType },
     });
 
-    const data = allBacklink || allBlog || allSocialBook || allFourm;
+    // find Social media
+    let allSocialMedia = await SocialMedia.findOne({
+      where: { id, projectId, taskType },
+    });
+
+    const data =
+      allBacklink || allBlog || allSocialBook || allFourm || allSocialMedia;
     if (data == null) {
       return {
         data: null,
@@ -520,7 +559,7 @@ exports.deleteProject = async (req) => {
       await SocialMediaTable.findOne({
         where: { projectId },
       });
-      console.log("log8");
+
       // delete discussion
       let deleteDiscussion = await Discussion.destroy({
         where: { projectId },

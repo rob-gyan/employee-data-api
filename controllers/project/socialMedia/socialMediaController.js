@@ -463,9 +463,10 @@ exports.getAllSocialMedia = async (req) => {
       }
     }
     allSocialMedia.map(async (data) => {
-      let socialMediaUpdateStatus = await SocialMedia.findOne({
+      let socialMediaUpdateStatus = await SocialMediaTable.findOne({
         where: { id: data.id },
       });
+
       await socialMediaUpdateStatus.update({ status: data.status });
     });
     return {
