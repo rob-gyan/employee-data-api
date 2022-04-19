@@ -1,6 +1,15 @@
 module.exports = (sequelize, Sequelize) => {
   const SeoAudit = sequelize.define("seoaudits", {
-    seoAuditTableId: {
+    tableCategory: {
+      type: Sequelize.TEXT,
+    },
+    tableSubCategory: {
+      type: Sequelize.TEXT,
+    },
+    checkQuestion: {
+      type: Sequelize.TEXT,
+    },
+    tool: {
       type: Sequelize.TEXT,
     },
     grading: {

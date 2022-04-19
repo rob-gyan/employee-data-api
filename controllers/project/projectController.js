@@ -1,4 +1,5 @@
 let db = require("../../models");
+const seoAudit = require("../project/seoAudit/alltable");
 
 const Project = db.projects;
 const SeoAudit = db.seoaudits;
@@ -29,7 +30,6 @@ exports.projectCreate = async (req) => {
   try {
     let { projectName, description, clientCompany, status } = req.body;
 
-    // // console.log(seoAudit);
     // for (ele of seoAudit) {
     //   const create = await SeoAudit.create({
     //     projectId: 1,
@@ -49,6 +49,16 @@ exports.projectCreate = async (req) => {
       projectCreater: req.user,
       createrRole: req.role,
     });
+
+    for (ele of seoAudit) {
+      await SeoAudit.create({
+        tableCategory: ele.tableCategory,
+        tableSubCategory: ele.tableSubCategory,
+        checkQuestion: ele.checkQuestion,
+        tool: ele.tool,
+        projectId: createProject.id,
+      });
+    }
 
     return {
       data: createProject,

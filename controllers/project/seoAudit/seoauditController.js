@@ -9,7 +9,7 @@ exports.seoAuditUpdate = async (req) => {
   try {
     let {
       projectType,
-      seoAuditTableId,
+      checkQuestion,
       projectId,
       grading,
       assign,
@@ -18,7 +18,6 @@ exports.seoAuditUpdate = async (req) => {
       status,
       timeEstimation,
       time,
-
       topKey,
       amount,
       note,
@@ -45,13 +44,13 @@ exports.seoAuditUpdate = async (req) => {
 
     // find seoAudit
     let seoAuditFind = await SeoAudit.findOne({
-      where: { seoAuditTableId },
+      where: { checkQuestion },
     });
 
     if (seoAuditFind == null) {
       updateSeoAudit = await SeoAudit.create({
         projectType,
-        seoAuditTableId,
+        checkQuestion,
         grading,
         assign,
         reassign,
@@ -116,11 +115,11 @@ exports.getAllSeoAudit = async (req) => {
 // **********seoAudit update status api controller**********
 exports.seoAuditUpdateStatus = async (req) => {
   try {
-    let { seoAuditTableId, status } = req.body;
+    let { checkQuestion, status } = req.body;
 
     // find seoAudit
     let seoAuditFind = await SeoAudit.findOne({
-      where: { seoAuditTableId },
+      where: { checkQuestion },
     });
 
     // if seoAudit doesn't exist
@@ -152,11 +151,11 @@ exports.seoAuditUpdateStatus = async (req) => {
 // **********seoAudit update time api controller**********
 exports.seoAuditUpdateTime = async (req) => {
   try {
-    let { seoAuditTableId, time } = req.body;
+    let { checkQuestion, time } = req.body;
 
     // find seoAudit
     let seoAuditFind = await SeoAudit.findOne({
-      where: { seoAuditTableId },
+      where: { checkQuestion },
     });
 
     // if seoAudit doesn't exist
@@ -187,11 +186,11 @@ exports.seoAuditUpdateTime = async (req) => {
 
 // **********get project task on the basis of projectId,seoAuditId  **********
 exports.getSeoAuditTask = async (req) => {
-  const { seoAuditTableId, projectId } = req.body;
+  const { checkQuestion, projectId } = req.body;
   try {
     // find SeoAudit
     let allSeoAudit = await SeoAudit.findOne({
-      where: { seoAuditTableId: seoAuditTableId, projectId },
+      where: { checkQuestion: checkQuestion, projectId },
     });
 
     const data = allSeoAudit;
@@ -1355,44 +1354,44 @@ exports.getSeoAuditTable = async (req) => {
     // let arr3 = getTable.map((item, i) => Object.assign({}, item, getData[i]));
     // console.log(arr3);
     // return;
-    const allData = [];
-    for (let index = 0; index < tableLength; index++) {
-      const element = getTable[index];
-      const allTableElement = [element];
-      for (const ele of allTableElement) {
-        const getData = await SeoAudit.findAll({
-          where: { projectId },
-        });
+    // const allData = [];
+    // for (let index = 0; index < tableLength; index++) {
+    //   const element = getTable[index];
+    //   const allTableElement = [element];
+    //   for (const ele of allTableElement) {
+    //     const getData = await SeoAudit.findAll({
+    //       where: { projectId },
+    //     });
 
-        for (const data of getData) {
-          allData.push({
-            seoAuditTableId: ele.id,
-            grading: data.status,
-            assign: data.assign,
-          });
-        }
-        // console.log(getData);
-        // allData.push({
-        //   seoAuditTableId: ele.id,
-        // grading: getData.grading,
-        // assign: getData.assign,
-        // reassign: getData.reassign,
-        // date: getData.date,
-        // status: getData.status,
-        // timeEstimation: getData.timeEstimation,
-        // time: getData.time,
-        // projectId: getData.projectId,
-        // taskType: getData.taskType,
-        // amount: getData.amount,
-        // topKey: getData.topKey,
-        // note: getData.note,
-        // startDate: getData.startDate,
-        // dueDate: getData.dueDate,
-        // createdAt: getData.createdAt,
-        // updatedAt: getData.updatedAt,
-        // });
-      }
-    }
+    //     for (const data of getData) {
+    //       allData.push({
+    //         checkQuestion: ele.id,
+    //         grading: data.status,
+    //         assign: data.assign,
+    //       });
+    //     }
+    // console.log(getData);
+    // allData.push({
+    //   checkQuestion: ele.id,
+    // grading: getData.grading,
+    // assign: getData.assign,
+    // reassign: getData.reassign,
+    // date: getData.date,
+    // status: getData.status,
+    // timeEstimation: getData.timeEstimation,
+    // time: getData.time,
+    // projectId: getData.projectId,
+    // taskType: getData.taskType,
+    // amount: getData.amount,
+    // topKey: getData.topKey,
+    // note: getData.note,
+    // startDate: getData.startDate,
+    // dueDate: getData.dueDate,
+    // createdAt: getData.createdAt,
+    // updatedAt: getData.updatedAt,
+    // });
+    //   }
+    // }
     // for (ele of getData) {
     //   for (element of getTable) {
     //     allData.push({
@@ -1409,7 +1408,7 @@ exports.getSeoAuditTable = async (req) => {
     //   });
     // }
     return {
-      data: allData,
+      data: getData,
       error: null,
       message: "Success",
       statusCode: 200,

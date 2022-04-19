@@ -45,7 +45,7 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.get("/form", csrfProtection, function (req, res) {
+app.get("/api/v1/getCSRF", csrfProtection, function (req, res) {
   // pass the csrfToken to the view
   res.send({ csrfToken: req.csrfToken() });
 });
