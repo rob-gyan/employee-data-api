@@ -1,4 +1,7 @@
 let db = require("../../../models");
+const { uuid } = require("uuidv4");
+let s3 = require("../../../aws_Bucket/upload/s3");
+const fs = require("fs");
 
 const SeoAuditDiscussion = db.discussions;
 const User = db.users;
@@ -72,7 +75,9 @@ exports.seoAuditDiscussionCreate = async (req) => {
       };
     } else {
       let image = req.files.imageUrl;
+
       const ab = fs.readFileSync(image.tempFilePath);
+
       let uploadMeta = await s3.uploadFile({
         Key: `${uuid()}-${Date.now()}`,
         ContentType: image.mimetype,

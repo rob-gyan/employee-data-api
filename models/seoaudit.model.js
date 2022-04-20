@@ -46,6 +46,10 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.JSON,
       defaultValue: JSON.stringify(),
     },
+    competitionData: {
+      type: Sequelize.JSON,
+      defaultValue: JSON.stringify(),
+    },
     note: {
       type: Sequelize.TEXT,
     },

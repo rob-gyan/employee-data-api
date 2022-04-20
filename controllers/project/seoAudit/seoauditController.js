@@ -19,6 +19,7 @@ exports.seoAuditUpdate = async (req) => {
       timeEstimation,
       time,
       topKey,
+      competitionData,
       amount,
       note,
       startDate,
@@ -44,7 +45,7 @@ exports.seoAuditUpdate = async (req) => {
 
     // find seoAudit
     let seoAuditFind = await SeoAudit.findOne({
-      where: { checkQuestion },
+      where: { checkQuestion, projectId },
     });
 
     if (seoAuditFind == null) {
@@ -60,6 +61,7 @@ exports.seoAuditUpdate = async (req) => {
         time,
         projectId,
         topKey,
+        competitionData,
         amount,
         startDate,
         dueDate,
@@ -78,6 +80,7 @@ exports.seoAuditUpdate = async (req) => {
         timeEstimation,
         time,
         topKey,
+        competitionData,
         note,
         amount,
         startDate,
