@@ -101,4 +101,28 @@ router.post("/getSeoAuditTable", auth, async (req, res) => {
   }
 });
 
+// *********create update SeoAudit top ten key table *********
+router.post("/updateCompetition", auth, async (req, res) => {
+  try {
+    let updateCompetition = await seoAuditController.createCompetitionApi(req);
+    let code = updateCompetition.statusCode;
+    console.log(code);
+    res.status(code).send(updateCompetition);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+// *********create update SeoAudit top ten key table *********
+router.post("/showCompetition", auth, async (req, res) => {
+  try {
+    let showCompetition = await seoAuditController.showCompetitionApi(req);
+    let code = showCompetition.statusCode;
+    console.log(code);
+    res.status(code).send(showCompetition);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
 module.exports = router;

@@ -54,6 +54,10 @@ db.discussions = require("./discussion.model.js")(sequelize, Sequelize);
 db.socialbooks = require("./socialBook.model.js")(sequelize, Sequelize);
 db.backlinks = require("./backlinktable.model.js")(sequelize, Sequelize);
 db.seoaudits = require("./seoaudit.model.js")(sequelize, Sequelize);
+db.seoaudittopkeywords = require("./seoAuditTopTenKey.model.js")(
+  sequelize,
+  Sequelize
+);
 db.seoaudittables = require("./seoAuditQuestion.model.js")(
   sequelize,
   Sequelize
