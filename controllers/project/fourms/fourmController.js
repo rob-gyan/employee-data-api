@@ -121,6 +121,7 @@ exports.fourmUpdate = async (req) => {
       status,
       estimateTime,
     } = req.body;
+    console.log("liveLinks", liveLinks);
 
     if (fourmId == "" || projectId == "" || !fourmId || !projectId) {
       return {
@@ -167,6 +168,7 @@ exports.fourmUpdate = async (req) => {
     if (keywordFind == null) {
       await Keyword.create({ keyword: keywordGroup, projectId });
     }
+    // await fourmFind.update({ liveLinks: "" });
 
     // update fourm
     var updateFourm = await fourmFind.update({

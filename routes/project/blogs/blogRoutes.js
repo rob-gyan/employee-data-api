@@ -50,6 +50,17 @@ router.post("/getBlogById", auth, async (req, res) => {
     res.status(500).send(error);
   }
 });
+// *********get blog by id and assignee api*********
+router.post("/getBlogByIdAssignee", auth, async (req, res) => {
+  try {
+    let getBlogByIdAssignee = await blogsController.getBlogByIdAssignee(req);
+    let code = getBlogByIdAssignee.statusCode;
+    console.log(code);
+    res.status(code).send(getBlogByIdAssignee);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
 
 // *********delete Blog by id api*********
 router.delete("/deleteBlog", auth, async (req, res) => {

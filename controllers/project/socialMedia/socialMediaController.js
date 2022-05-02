@@ -582,6 +582,182 @@ exports.getSocialMediaById = async (req) => {
   }
 };
 
+// **********get social media task assignee baisi on the basis of projectId,socialMediaId   **********
+exports.getSocialMediaByIdAssignee = async (req) => {
+  const { projectId } = req.body;
+  try {
+    if (projectId == "" || !projectId) {
+      return {
+        data: null,
+        error: "something went wrong",
+        message: "Failed",
+        statusCode: 400,
+      };
+    }
+    // find social media
+    let socialMediaElement = await SocialMediaTable.findAll({
+      where: { projectId },
+    });
+
+    if (socialMediaElement == null) {
+      return {
+        data: null,
+        error: null,
+        message: "data not found.",
+        statusCode: 200,
+      };
+    }
+
+    const allAssigneeData = [];
+    for (const data of socialMediaElement) {
+      let allSocialMediaPostContent = await SocialMediaContent.findOne({
+        where: { projectId: data.projectId, id: data.postContentId },
+      });
+
+      let allSocialMedias = await SocialMedia.findOne({
+        where: { projectId: data.projectId, id: data.mediaId },
+      });
+
+      let allSocialMediaPost = await SocialMediaPost.findOne({
+        where: { projectId: data.projectId, id: data.postId },
+      });
+
+      allAssigneeData.push({
+        id: data.id,
+        taskType: data.taskType,
+        projectId: data.projectId,
+        projectName: data.projectName,
+        fileRichText: data.fileRichText,
+        postContent: allSocialMediaPostContent.postContent,
+        postContentType: allSocialMediaPostContent.postContentType,
+        postContentAssignee: allSocialMediaPostContent.postContentAssignee,
+        assignee: allSocialMediaPostContent.postContentAssignee,
+        postContentPlateform: allSocialMediaPostContent.postContentPlateform,
+        postContentStartDate: allSocialMediaPostContent.postContentStartDate,
+        postContentDueDate: allSocialMediaPostContent.postContentDueDate,
+        dueDate: allSocialMediaPostContent.postContentDueDate,
+        postContentStatus: allSocialMediaPostContent.postContentStatus,
+        sttaus: allSocialMediaPostContent.postContentStatus,
+        postContentTimeEstimation:
+          allSocialMediaPostContent.postContentTimeEstimation,
+        media: allSocialMedias.media,
+        mediaAdditionalImage: allSocialMedias.mediaAdditionalImage,
+        mediaAssignee: allSocialMedias.mediaAssignee,
+        mediaImage: allSocialMedias.mediaImage,
+        mediaStartDate: allSocialMedias.mediaStartDate,
+        mediaDueDate: allSocialMedias.mediaDueDate,
+        mediaStatus: allSocialMedias.mediaStatus,
+        mediaTimeEstimation: allSocialMedias.mediaTimeEstimation,
+        mediaTime: allSocialMedias.mediaTime,
+        post: allSocialMediaPost.post,
+        postAssignee: allSocialMediaPost.postAssignee,
+        postSetTime: allSocialMediaPost.postSetTime,
+        postSetDate: allSocialMediaPost.postSetDate,
+        postStartDate: allSocialMediaPost.postStartDate,
+        postDueDate: allSocialMediaPost.postDueDate,
+        postStatus: allSocialMediaPost.postStatus,
+        postTimeEstimation: allSocialMediaPost.postTimeEstimation,
+        postTime: allSocialMediaPost.postTime,
+      });
+
+      allAssigneeData.push({
+        id: data.id,
+        taskType: data.taskType,
+        projectId: data.projectId,
+        projectName: data.projectName,
+        fileRichText: data.fileRichText,
+        postContent: allSocialMediaPostContent.postContent,
+        postContentType: allSocialMediaPostContent.postContentType,
+        postContentAssignee: allSocialMediaPostContent.postContentAssignee,
+        postContentPlateform: allSocialMediaPostContent.postContentPlateform,
+        postContentStartDate: allSocialMediaPostContent.postContentStartDate,
+        postContentDueDate: allSocialMediaPostContent.postContentDueDate,
+        postContentStatus: allSocialMediaPostContent.postContentStatus,
+        postContentTimeEstimation:
+          allSocialMediaPostContent.postContentTimeEstimation,
+        media: allSocialMedias.media,
+        mediaAdditionalImage: allSocialMedias.mediaAdditionalImage,
+        mediaAssignee: allSocialMedias.mediaAssignee,
+        assignee: allSocialMedias.mediaAssignee,
+        mediaImage: allSocialMedias.mediaImage,
+        mediaStartDate: allSocialMedias.mediaStartDate,
+        mediaDueDate: allSocialMedias.mediaDueDate,
+        dueDate: allSocialMedias.mediaDueDate,
+        mediaStatus: allSocialMedias.mediaStatus,
+        status: allSocialMedias.mediaStatus,
+        mediaTimeEstimation: allSocialMedias.mediaTimeEstimation,
+        mediaTime: allSocialMedias.mediaTime,
+        post: allSocialMediaPost.post,
+        postAssignee: allSocialMediaPost.postAssignee,
+        postSetTime: allSocialMediaPost.postSetTime,
+        postSetDate: allSocialMediaPost.postSetDate,
+        postStartDate: allSocialMediaPost.postStartDate,
+        postDueDate: allSocialMediaPost.postDueDate,
+        postStatus: allSocialMediaPost.postStatus,
+        postTimeEstimation: allSocialMediaPost.postTimeEstimation,
+        postTime: allSocialMediaPost.postTime,
+      });
+
+      allAssigneeData.push({
+        id: data.id,
+        taskType: data.taskType,
+        projectId: data.projectId,
+        projectName: data.projectName,
+        fileRichText: data.fileRichText,
+        postContent: allSocialMediaPostContent.postContent,
+        postContentType: allSocialMediaPostContent.postContentType,
+        postContentAssignee: allSocialMediaPostContent.postContentAssignee,
+        postContentPlateform: allSocialMediaPostContent.postContentPlateform,
+        postContentStartDate: allSocialMediaPostContent.postContentStartDate,
+        postContentDueDate: allSocialMediaPostContent.postContentDueDate,
+        postContentStatus: allSocialMediaPostContent.postContentStatus,
+        postContentTimeEstimation:
+          allSocialMediaPostContent.postContentTimeEstimation,
+        media: allSocialMedias.media,
+        mediaAdditionalImage: allSocialMedias.mediaAdditionalImage,
+        mediaAssignee: allSocialMedias.mediaAssignee,
+        mediaImage: allSocialMedias.mediaImage,
+        mediaStartDate: allSocialMedias.mediaStartDate,
+        mediaDueDate: allSocialMedias.mediaDueDate,
+        mediaStatus: allSocialMedias.mediaStatus,
+        mediaTimeEstimation: allSocialMedias.mediaTimeEstimation,
+        mediaTime: allSocialMedias.mediaTime,
+        post: allSocialMediaPost.post,
+        postAssignee: allSocialMediaPost.postAssignee,
+        assignee: allSocialMediaPost.postAssignee,
+        postSetTime: allSocialMediaPost.postSetTime,
+        postSetDate: allSocialMediaPost.postSetDate,
+        postStartDate: allSocialMediaPost.postStartDate,
+        postDueDate: allSocialMediaPost.postDueDate,
+        dueDate: allSocialMediaPost.postDueDate,
+        postStatus: allSocialMediaPost.postStatus,
+        status: allSocialMediaPost.postStatus,
+        postTimeEstimation: allSocialMediaPost.postTimeEstimation,
+        postTime: allSocialMediaPost.postTime,
+      });
+    }
+
+    const data = allAssigneeData;
+    if (data == null) {
+      return {
+        data: null,
+        error: "Something went wrong",
+        message: "Failed",
+        statusCode: 400,
+      };
+    }
+
+    return {
+      data: data,
+      error: null,
+      message: "SUCCESS",
+      statusCode: 200,
+    };
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+
 // **********delete SocialMedia api by id controller**********
 exports.deleteSocialMedia = async (req) => {
   try {

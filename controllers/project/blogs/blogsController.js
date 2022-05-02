@@ -506,6 +506,161 @@ exports.getBlogById = async (req) => {
     res.status(500).send(error.message);
   }
 };
+// **********get blog task on the basis of projectId,blogId  **********
+exports.getBlogByIdAssignee = async (req) => {
+  const { projectId } = req.body;
+  try {
+    if (projectId == "" || !projectId) {
+      return {
+        data: null,
+        error: "something went wrong",
+        message: "Failed",
+        statusCode: 400,
+      };
+    }
+    // find blog
+    let allBlog = await Blog.findAll({
+      where: { projectId },
+    });
+
+    const allAssignee = [];
+    // const blogById = [];
+    for (const data of allBlog) {
+      let allBlogTopic = await BlogTopic.findOne({
+        where: { projectId: data.projectId, id: data.topicId },
+      });
+      let allBlogImage = await BlogImage.findOne({
+        where: { projectId: data.projectId, id: data.imageSizeId },
+      });
+      let allBlogUpload = await BlogUpload.findOne({
+        where: { projectId: data.projectId, id: data.uploadId },
+      });
+
+      allAssignee.push({
+        id: data.id,
+        projectId: data.projectId,
+        projectName: data.projectName,
+        fileRichText: data.fileRichText,
+        taskType: data.taskType,
+        topicId: allBlogTopic.id,
+        topic: allBlogTopic.topic,
+        topicWebsite: allBlogTopic.topicWebsite,
+        topicStatus: allBlogTopic.topicStatus,
+        status: allBlogTopic.topicStatus,
+        topicAssignee: allBlogTopic.topicAssignee,
+        assignee: allBlogTopic.topicAssignee,
+        topicStartDate: allBlogTopic.topicStartDate,
+        topicDueDate: allBlogTopic.topicDueDate,
+        dueDate: allBlogTopic.topicDueDate,
+        topicTimeEstimation: allBlogTopic.topicTimeEstimation,
+        imageId: allBlogImage.id,
+        imageSize: allBlogImage.imageSize,
+        imageAdditionalImage: allBlogImage.imageAdditionalImage,
+        imageAssignee: allBlogImage.imageAssignee,
+        imageImage: allBlogImage.imageImage,
+        imageStartDate: allBlogImage.imageStartDate,
+        imageDueDate: allBlogImage.imageDueDate,
+        imageStatus: allBlogImage.imageStatus,
+        imageTimeEstimation: allBlogImage.imageTimeEstimation,
+        imageTime: allBlogImage.imageTime,
+        uploadId: allBlogUpload.id,
+        upload: allBlogUpload.upload,
+        uploadImageWithBlog: allBlogUpload.uploadImageWithBlog,
+        uploadAssignee: allBlogUpload.uploadAssignee,
+        uploadStartDate: allBlogUpload.uploadStartDate,
+        uploadDueDate: allBlogUpload.uploadDueDate,
+        uploadStatus: allBlogUpload.uploadStatus,
+        uploadTimeEstimation: allBlogUpload.uploadTimeEstimation,
+        uploadTime: allBlogUpload.uploadTime,
+      });
+
+      allAssignee.push({
+        id: data.id,
+        projectId: data.projectId,
+        projectName: data.projectName,
+        fileRichText: data.fileRichText,
+        taskType: data.taskType,
+        topicId: allBlogTopic.id,
+        topic: allBlogTopic.topic,
+        topicWebsite: allBlogTopic.topicWebsite,
+        topicStatus: allBlogTopic.topicStatus,
+        topicAssignee: allBlogTopic.topicAssignee,
+        topicStartDate: allBlogTopic.topicStartDate,
+        topicDueDate: allBlogTopic.topicDueDate,
+        topicTimeEstimation: allBlogTopic.topicTimeEstimation,
+        imageId: allBlogImage.id,
+        imageSize: allBlogImage.imageSize,
+        imageAdditionalImage: allBlogImage.imageAdditionalImage,
+        imageAssignee: allBlogImage.imageAssignee,
+        assignee: allBlogImage.imageAssignee,
+        imageImage: allBlogImage.imageImage,
+        imageStartDate: allBlogImage.imageStartDate,
+        imageDueDate: allBlogImage.imageDueDate,
+        dueDate: allBlogImage.imageDueDate,
+        imageStatus: allBlogImage.imageStatus,
+        status: allBlogImage.imageStatus,
+        imageTimeEstimation: allBlogImage.imageTimeEstimation,
+        imageTime: allBlogImage.imageTime,
+        uploadId: allBlogUpload.id,
+        upload: allBlogUpload.upload,
+        uploadImageWithBlog: allBlogUpload.uploadImageWithBlog,
+        uploadAssignee: allBlogUpload.uploadAssignee,
+        uploadStartDate: allBlogUpload.uploadStartDate,
+        uploadDueDate: allBlogUpload.uploadDueDate,
+        uploadStatus: allBlogUpload.uploadStatus,
+        uploadTimeEstimation: allBlogUpload.uploadTimeEstimation,
+        uploadTime: allBlogUpload.uploadTime,
+      });
+
+      allAssignee.push({
+        id: data.id,
+        projectId: data.projectId,
+        projectName: data.projectName,
+        fileRichText: data.fileRichText,
+        taskType: data.taskType,
+        topicId: allBlogTopic.id,
+        topic: allBlogTopic.topic,
+        topicWebsite: allBlogTopic.topicWebsite,
+        topicStatus: allBlogTopic.topicStatus,
+        topicAssignee: allBlogTopic.topicAssignee,
+        topicStartDate: allBlogTopic.topicStartDate,
+        topicDueDate: allBlogTopic.topicDueDate,
+        topicTimeEstimation: allBlogTopic.topicTimeEstimation,
+        imageId: allBlogImage.id,
+        imageSize: allBlogImage.imageSize,
+        imageAdditionalImage: allBlogImage.imageAdditionalImage,
+        imageAssignee: allBlogImage.imageAssignee,
+        imageImage: allBlogImage.imageImage,
+        imageStartDate: allBlogImage.imageStartDate,
+        imageDueDate: allBlogImage.imageDueDate,
+        imageStatus: allBlogImage.imageStatus,
+        imageTimeEstimation: allBlogImage.imageTimeEstimation,
+        imageTime: allBlogImage.imageTime,
+        uploadId: allBlogUpload.id,
+        upload: allBlogUpload.upload,
+        uploadImageWithBlog: allBlogUpload.uploadImageWithBlog,
+        uploadAssignee: allBlogUpload.uploadAssignee,
+        assignee: allBlogUpload.uploadAssignee,
+        uploadStartDate: allBlogUpload.uploadStartDate,
+        uploadDueDate: allBlogUpload.uploadDueDate,
+        dueDate: allBlogUpload.uploadDueDate,
+        uploadStatus: allBlogUpload.uploadStatus,
+        status: allBlogUpload.uploadStatus,
+        uploadTimeEstimation: allBlogUpload.uploadTimeEstimation,
+        uploadTime: allBlogUpload.uploadTime,
+      });
+    }
+
+    return {
+      data: allAssignee,
+      error: null,
+      message: "SUCCESS",
+      statusCode: 200,
+    };
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
 
 // **********delete Blog api by id controller**********
 exports.deleteBlog = async (req) => {

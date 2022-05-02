@@ -10,6 +10,9 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.JSON,
       defaultValue: JSON.stringify(),
     },
+    amount: {
+      type: Sequelize.TEXT,
+    },
     assignee: {
       type: Sequelize.TEXT,
     },

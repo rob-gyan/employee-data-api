@@ -54,6 +54,18 @@ router.post("/socialMediaById", auth, async (req, res) => {
     res.status(500).send(error);
   }
 });
+// *********get SocialMedia on the basis of assignee api*********
+router.post("/socialMediaByIdAssignee", auth, async (req, res) => {
+  try {
+    let getSocialMediaByIdAssignee =
+      await socialMediaController.getSocialMediaByIdAssignee(req);
+    let code = getSocialMediaByIdAssignee.statusCode;
+    console.log(code);
+    res.status(code).send(getSocialMediaByIdAssignee);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
 
 // *********delete SocialMedia by id api*********
 router.delete("/deleteSocialMedia", auth, async (req, res) => {
