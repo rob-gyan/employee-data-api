@@ -27,6 +27,9 @@ module.exports = (sequelize, Sequelize) => {
     topicTime: {
       type: Sequelize.TEXT,
     },
+    topicKeyword: {
+      type: Sequelize.TEXT,
+    },
   });
 
   return BlogTopic;

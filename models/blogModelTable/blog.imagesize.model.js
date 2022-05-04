@@ -30,6 +30,14 @@ module.exports = (sequelize, Sequelize) => {
     imageTime: {
       type: Sequelize.TEXT,
     },
+    addImage: {
+      type: Sequelize.JSON,
+      defaultValue: JSON.stringify(),
+    },
+    extraImage: {
+      type: Sequelize.JSON,
+      defaultValue: JSON.stringify(),
+    },
   });
   return BlogImage;
 };

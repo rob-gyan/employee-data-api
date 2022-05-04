@@ -21,6 +21,7 @@ module.exports = (sequelize, Sequelize) => {
     taskType: {
       type: Sequelize.TEXT,
     },
+
     status: {
       type: Sequelize.TEXT,
     },

@@ -8,6 +8,7 @@ const Project = db.projects;
 const Website = db.websites;
 const ImageSize = db.imageSizes;
 const Upload = db.uploads;
+const Keyword = db.keywords;
 
 // **********Blog create api controller**********
 exports.blogCreate = async (req) => {
@@ -22,6 +23,7 @@ exports.blogCreate = async (req) => {
       topicStatus,
       topicTimeEstimation,
       topicTime,
+      topicKeyword,
       imageSize,
       imageAdditionalImage,
       imageAssignee,
@@ -40,6 +42,8 @@ exports.blogCreate = async (req) => {
       uploadTimeEstimation,
       uploadTime,
       projectId,
+      addImage,
+      extraImage,
     } = req.body;
 
     if (projectId == "" || !projectId) {
@@ -102,6 +106,7 @@ exports.blogCreate = async (req) => {
       topicStatus,
       topicTimeEstimation,
       topicTime,
+      topicKeyword,
     });
 
     // add blog image information
@@ -116,6 +121,8 @@ exports.blogCreate = async (req) => {
       imageStatus,
       imageTimeEstimation,
       imageTime,
+      addImage,
+      extraImage,
     });
 
     // add blog upload information
@@ -146,6 +153,13 @@ exports.blogCreate = async (req) => {
       projectName: projectFind.dataValues.projectName,
       status: "PROCESSING",
     });
+    // find keyword
+    let keywordFind = await Keyword.findOne({
+      where: { keyword: topicKeyword },
+    });
+    if (keywordFind == null) {
+      await Keyword.create({ keyword: topicKeyword, projectId });
+    }
 
     return {
       data: blogCreate,
@@ -173,6 +187,7 @@ exports.blogUpdate = async (req) => {
       topicStatus,
       topicTimeEstimation,
       topicTime,
+      topicKeyword,
       imageSize,
       imageAdditionalImage,
       imageAssignee,
@@ -190,6 +205,8 @@ exports.blogUpdate = async (req) => {
       uploadStatus,
       uploadTimeEstimation,
       uploadTime,
+      addImage,
+      extraImage,
     } = req.body;
 
     if (blogId == "" || projectId == "" || !blogId || !projectId) {
@@ -222,7 +239,6 @@ exports.blogUpdate = async (req) => {
     let blogTopicFind = await BlogTopic.findOne({
       where: { id: blogFind.dataValues.topicId },
     });
-    // console.log(blogTopicFind.topicStatus);
 
     // if blog topic doesn't exist
     if (blogTopicFind == null) {
@@ -257,6 +273,7 @@ exports.blogUpdate = async (req) => {
     if (urlUpload == null) {
       await Upload.create({ upload });
     }
+
     // update blog topic
     await blogTopicFind.update({
       topic,
@@ -267,6 +284,7 @@ exports.blogUpdate = async (req) => {
       topicTime,
       topicDueDate,
       topicTimeEstimation,
+      topicKeyword,
     });
 
     // find blog imageSize
@@ -295,6 +313,8 @@ exports.blogUpdate = async (req) => {
       imageDueDate,
       imageTimeEstimation,
       imageTime,
+      addImage,
+      extraImage,
     });
 
     // find blog upload
@@ -311,8 +331,9 @@ exports.blogUpdate = async (req) => {
         statusCode: 400,
       };
     }
+
     // update blog upload
-    await blogUploadFind.update({
+    const ab = await blogUploadFind.update({
       upload,
       uploadImageWithBlog,
       uploadAssignee,
@@ -322,6 +343,7 @@ exports.blogUpdate = async (req) => {
       uploadTime,
       uploadStatus,
     });
+    console.log(ab);
 
     return {
       data: "updated blog!!",
@@ -380,6 +402,7 @@ exports.getAllBlogs = async (req) => {
           topicStartDate: allBlogTopic.topicStartDate,
           topicDueDate: allBlogTopic.topicDueDate,
           topicTimeEstimation: allBlogTopic.topicTimeEstimation,
+          topicKeyword: allBlogTopic.topicKeyword,
           imageSize: allBlogImage.imageSize,
           imageAdditionalImage: allBlogImage.imageAdditionalImage,
           imageAssignee: allBlogImage.imageAssignee,
@@ -389,6 +412,8 @@ exports.getAllBlogs = async (req) => {
           imageStatus: allBlogImage.imageStatus,
           imageTimeEstimation: allBlogImage.imageTimeEstimation,
           imageTime: allBlogImage.imageTime,
+          addImage: allBlogImage.addImage,
+          extraImage: allBlogImage.extraImage,
           upload: allBlogUpload.upload,
           uploadImageWithBlog: allBlogUpload.uploadImageWithBlog,
           uploadAssignee: allBlogUpload.uploadAssignee,
@@ -466,6 +491,7 @@ exports.getBlogById = async (req) => {
         topicStartDate: allBlogTopic.topicStartDate,
         topicDueDate: allBlogTopic.topicDueDate,
         topicTimeEstimation: allBlogTopic.topicTimeEstimation,
+        topicKeyword: allBlogTopic.topicKeyword,
         imageSize: allBlogImage.imageSize,
         imageAdditionalImage: allBlogImage.imageAdditionalImage,
         imageAssignee: allBlogImage.imageAssignee,
@@ -475,6 +501,8 @@ exports.getBlogById = async (req) => {
         imageStatus: allBlogImage.imageStatus,
         imageTimeEstimation: allBlogImage.imageTimeEstimation,
         imageTime: allBlogImage.imageTime,
+        addImage: allBlogImage.addImage,
+        extraImage: allBlogImage.extraImage,
         upload: allBlogUpload.upload,
         uploadImageWithBlog: allBlogUpload.uploadImageWithBlog,
         uploadAssignee: allBlogUpload.uploadAssignee,
@@ -546,6 +574,7 @@ exports.getBlogByIdAssignee = async (req) => {
         topic: allBlogTopic.topic,
         topicWebsite: allBlogTopic.topicWebsite,
         topicStatus: allBlogTopic.topicStatus,
+        topicKeyword: allBlogTopic.topicKeyword,
         status: allBlogTopic.topicStatus,
         topicAssignee: allBlogTopic.topicAssignee,
         assignee: allBlogTopic.topicAssignee,
@@ -563,6 +592,8 @@ exports.getBlogByIdAssignee = async (req) => {
         imageStatus: allBlogImage.imageStatus,
         imageTimeEstimation: allBlogImage.imageTimeEstimation,
         imageTime: allBlogImage.imageTime,
+        addImage: allBlogImage.addImage,
+        extraImage: allBlogImage.extraImage,
         uploadId: allBlogUpload.id,
         upload: allBlogUpload.upload,
         uploadImageWithBlog: allBlogUpload.uploadImageWithBlog,
@@ -588,6 +619,7 @@ exports.getBlogByIdAssignee = async (req) => {
         topicStartDate: allBlogTopic.topicStartDate,
         topicDueDate: allBlogTopic.topicDueDate,
         topicTimeEstimation: allBlogTopic.topicTimeEstimation,
+        topicKeyword: allBlogTopic.topicKeyword,
         imageId: allBlogImage.id,
         imageSize: allBlogImage.imageSize,
         imageAdditionalImage: allBlogImage.imageAdditionalImage,
@@ -598,6 +630,8 @@ exports.getBlogByIdAssignee = async (req) => {
         imageDueDate: allBlogImage.imageDueDate,
         dueDate: allBlogImage.imageDueDate,
         imageStatus: allBlogImage.imageStatus,
+        addImage: allBlogImage.addImage,
+        extraImage: allBlogImage.extraImage,
         status: allBlogImage.imageStatus,
         imageTimeEstimation: allBlogImage.imageTimeEstimation,
         imageTime: allBlogImage.imageTime,
@@ -626,6 +660,7 @@ exports.getBlogByIdAssignee = async (req) => {
         topicStartDate: allBlogTopic.topicStartDate,
         topicDueDate: allBlogTopic.topicDueDate,
         topicTimeEstimation: allBlogTopic.topicTimeEstimation,
+        topicKeyword: allBlogTopic.topicKeyword,
         imageId: allBlogImage.id,
         imageSize: allBlogImage.imageSize,
         imageAdditionalImage: allBlogImage.imageAdditionalImage,
@@ -636,6 +671,8 @@ exports.getBlogByIdAssignee = async (req) => {
         imageStatus: allBlogImage.imageStatus,
         imageTimeEstimation: allBlogImage.imageTimeEstimation,
         imageTime: allBlogImage.imageTime,
+        addImage: allBlogImage.addImage,
+        extraImage: allBlogImage.extraImage,
         uploadId: allBlogUpload.id,
         upload: allBlogUpload.upload,
         uploadImageWithBlog: allBlogUpload.uploadImageWithBlog,
