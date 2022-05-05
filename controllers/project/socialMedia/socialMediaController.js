@@ -121,7 +121,8 @@ exports.socialMediaCreate = async (req) => {
       postContentStartDate,
       postContentDueDate,
       projectId,
-      postContentStatus,
+      postContentStatus:
+        postContentAssignee === "" ? "UNASSIGNED" : postContentStatus,
       postContentTimeEstimation,
       postContentTime,
     });
@@ -135,7 +136,7 @@ exports.socialMediaCreate = async (req) => {
       mediaStartDate,
       mediaDueDate,
       projectId,
-      mediaStatus,
+      mediaStatus: mediaAssignee === "" ? "UNASSIGNED" : mediaStatus,
       mediaTimeEstimation,
       mediaTime,
     });
@@ -149,7 +150,7 @@ exports.socialMediaCreate = async (req) => {
       postStartDate,
       postDueDate,
       projectId,
-      postStatus,
+      postStatus: postAssignee === "" ? "UNASSIGNED" : postStatus,
       postTimeEstimation,
       postTime,
     });

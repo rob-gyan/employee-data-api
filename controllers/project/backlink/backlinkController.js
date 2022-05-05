@@ -73,7 +73,7 @@ exports.backlinkCreate = async (req) => {
       projectId,
       taskType: "BACKLINK",
       projectName: projectFind.dataValues.projectName,
-      status,
+      status: assignee === "" ? "UNASSIGNED" : status,
     });
 
     // find type

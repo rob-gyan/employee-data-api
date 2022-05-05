@@ -60,7 +60,7 @@ exports.fourmCreate = async (req) => {
       amount,
       startDate,
       dueDate,
-      status,
+      status: assignee === "" ? "UNASSIGNED" : status,
       estimateTime,
       projectId,
       projectName: projectFind.dataValues.projectName,

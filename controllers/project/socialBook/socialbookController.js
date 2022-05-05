@@ -74,7 +74,7 @@ exports.socialBookCreate = async (req) => {
       dueDate,
       amount,
       timeEstimation,
-      status,
+      status: assignee === "" ? "UNASSIGNED" : status,
       projectId,
       time,
       taskType: "SOCIALBOOK",
