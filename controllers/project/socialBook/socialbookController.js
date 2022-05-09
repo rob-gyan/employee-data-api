@@ -11,6 +11,7 @@ exports.socialBookCreate = async (req) => {
     let {
       urlBlog,
       tags,
+      topicTagsKeyword,
       liveLinks,
       assignee,
       startDate,
@@ -68,6 +69,7 @@ exports.socialBookCreate = async (req) => {
     var socialBookCreate = await SocialBook.create({
       urlBlog,
       tags,
+      topicTagsKeyword,
       liveLinks,
       assignee,
       startDate,
@@ -100,6 +102,7 @@ exports.socialBookUpdate = async (req) => {
       projectId,
       urlBlog,
       tags,
+      topicTagsKeyword,
       liveLinks,
       amount,
       assignee,
@@ -150,6 +153,7 @@ exports.socialBookUpdate = async (req) => {
     var updateSocialBook = await socialBookFind.update({
       urlBlog,
       tags,
+      topicTagsKeyword,
       liveLinks,
       amount,
       assignee,

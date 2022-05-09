@@ -6,6 +6,10 @@ module.exports = (sequelize, Sequelize) => {
     tags: {
       type: Sequelize.TEXT,
     },
+    topicTagsKeyword: {
+      type: Sequelize.JSON,
+      defaultValue: JSON.stringify(),
+    },
     liveLinks: {
       type: Sequelize.JSON,
       defaultValue: JSON.stringify(),

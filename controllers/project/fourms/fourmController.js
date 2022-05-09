@@ -23,6 +23,7 @@ exports.fourmCreate = async (req) => {
       status,
       estimateTime,
       projectId,
+      extraKeyword,
     } = req.body;
     if (projectId == "" || !projectId) {
       return {
@@ -53,6 +54,7 @@ exports.fourmCreate = async (req) => {
       type,
       category,
       keywordGroup,
+      extraKeyword,
       profile,
       url,
       liveLinks,
@@ -111,6 +113,7 @@ exports.fourmUpdate = async (req) => {
       type,
       category,
       keywordGroup,
+      extraKeyword,
       profile,
       url,
       liveLinks,
@@ -121,7 +124,6 @@ exports.fourmUpdate = async (req) => {
       status,
       estimateTime,
     } = req.body;
-    console.log("liveLinks", liveLinks);
 
     if (fourmId == "" || projectId == "" || !fourmId || !projectId) {
       return {
@@ -184,6 +186,7 @@ exports.fourmUpdate = async (req) => {
       dueDate,
       status,
       estimateTime,
+      extraKeyword,
     });
 
     return {

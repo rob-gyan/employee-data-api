@@ -15,6 +15,10 @@ module.exports = (sequelize, Sequelize) => {
     url: {
       type: Sequelize.TEXT,
     },
+    extraKeyword: {
+      type: Sequelize.JSON,
+      defaultValue: JSON.stringify(),
+    },
     liveLinks: {
       type: Sequelize.JSON,
       defaultValue: JSON.stringify(),

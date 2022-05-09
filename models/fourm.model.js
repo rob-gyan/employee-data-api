@@ -52,6 +52,10 @@ module.exports = (sequelize, Sequelize) => {
     time: {
       type: Sequelize.TEXT,
     },
+    extraKeyword: {
+      type: Sequelize.JSON,
+      defaultValue: JSON.stringify(),
+    },
   });
   return Fourm;
 };

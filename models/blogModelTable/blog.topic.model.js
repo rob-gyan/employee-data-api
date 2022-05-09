@@ -30,6 +30,10 @@ module.exports = (sequelize, Sequelize) => {
     topicKeyword: {
       type: Sequelize.TEXT,
     },
+    topicExtraKeyword: {
+      type: Sequelize.JSON,
+      defaultValue: JSON.stringify(),
+    },
   });
 
   return BlogTopic;

@@ -24,6 +24,7 @@ exports.blogCreate = async (req) => {
       topicTimeEstimation,
       topicTime,
       topicKeyword,
+      topicExtraKeyword,
       imageSize,
       imageAdditionalImage,
       imageAssignee,
@@ -107,6 +108,7 @@ exports.blogCreate = async (req) => {
       topicTimeEstimation,
       topicTime,
       topicKeyword,
+      topicExtraKeyword,
     });
 
     // add blog image information
@@ -207,6 +209,7 @@ exports.blogUpdate = async (req) => {
       uploadTime,
       addImage,
       extraImage,
+      topicExtraKeyword,
     } = req.body;
 
     if (blogId == "" || projectId == "" || !blogId || !projectId) {
@@ -285,6 +288,7 @@ exports.blogUpdate = async (req) => {
       topicDueDate,
       topicTimeEstimation,
       topicKeyword,
+      topicExtraKeyword,
     });
 
     // find blog imageSize
@@ -333,7 +337,7 @@ exports.blogUpdate = async (req) => {
     }
 
     // update blog upload
-    const ab = await blogUploadFind.update({
+    await blogUploadFind.update({
       upload,
       uploadImageWithBlog,
       uploadAssignee,
@@ -343,7 +347,6 @@ exports.blogUpdate = async (req) => {
       uploadTime,
       uploadStatus,
     });
-    console.log(ab);
 
     return {
       data: "updated blog!!",
@@ -403,6 +406,7 @@ exports.getAllBlogs = async (req) => {
           topicDueDate: allBlogTopic.topicDueDate,
           topicTimeEstimation: allBlogTopic.topicTimeEstimation,
           topicKeyword: allBlogTopic.topicKeyword,
+          topicExtraKeyword: allBlogTopic.topicExtraKeyword,
           imageSize: allBlogImage.imageSize,
           imageAdditionalImage: allBlogImage.imageAdditionalImage,
           imageAssignee: allBlogImage.imageAssignee,
@@ -492,6 +496,7 @@ exports.getBlogById = async (req) => {
         topicDueDate: allBlogTopic.topicDueDate,
         topicTimeEstimation: allBlogTopic.topicTimeEstimation,
         topicKeyword: allBlogTopic.topicKeyword,
+        topicExtraKeyword: allBlogTopic.topicExtraKeyword,
         imageSize: allBlogImage.imageSize,
         imageAdditionalImage: allBlogImage.imageAdditionalImage,
         imageAssignee: allBlogImage.imageAssignee,

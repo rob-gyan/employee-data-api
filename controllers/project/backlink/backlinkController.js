@@ -17,6 +17,7 @@ exports.backlinkCreate = async (req) => {
       type,
       category,
       keywordGroup,
+      extraKeyword,
       profile,
       url,
       liveLinks,
@@ -60,6 +61,7 @@ exports.backlinkCreate = async (req) => {
       type,
       category,
       keywordGroup,
+      extraKeyword,
       profile,
       url,
       liveLinks,
@@ -107,7 +109,15 @@ exports.backlinkCreate = async (req) => {
       await Profile.create({ profile });
     }
 
-    // find keyword
+    // for (let ele of extraKeyword) {
+    //   // find keyword
+    //   let keywordFind = await Keyword.findOne({
+    //     where: { keyword: ele },
+    //   });
+    //   if (keywordFind == null) {
+    //     await Keyword.create({ keyword: ele, projectId });
+    //   }
+    // }
     let keywordFind = await Keyword.findOne({
       where: { keyword: keywordGroup },
     });
@@ -146,6 +156,7 @@ exports.backlinkUpdate = async (req) => {
       timeEstimation,
       time,
       status,
+      extraKeyword,
     } = req.body;
     if (backlinkId == "" || projectId == "" || !backlinkId || !projectId) {
       return {
@@ -223,6 +234,7 @@ exports.backlinkUpdate = async (req) => {
       amount,
       timeEstimation,
       time,
+      extraKeyword,
       status,
     });
 

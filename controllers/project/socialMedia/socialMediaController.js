@@ -34,6 +34,8 @@ exports.socialMediaCreate = async (req) => {
       mediaStatus,
       mediaTimeEstimation,
       mediaTime,
+      addImage,
+      extraImage,
       post,
       postAssignee,
       postSetTime,
@@ -139,6 +141,8 @@ exports.socialMediaCreate = async (req) => {
       mediaStatus: mediaAssignee === "" ? "UNASSIGNED" : mediaStatus,
       mediaTimeEstimation,
       mediaTime,
+      addImage,
+      extraImage,
     });
 
     // add socialmedia post information
@@ -207,6 +211,8 @@ exports.socialMediaUpdate = async (req) => {
       mediaStatus,
       mediaTimeEstimation,
       mediaTime,
+      addImage,
+      extraImage,
       post,
       postAssignee,
       postSetTime,
@@ -342,6 +348,8 @@ exports.socialMediaUpdate = async (req) => {
       mediaStatus,
       mediaTimeEstimation,
       mediaTime,
+      addImage,
+      extraImage,
     });
 
     // find social media post
@@ -435,6 +443,8 @@ exports.getAllSocialMedia = async (req) => {
           mediaAdditionalImage: allSocialMedias.mediaAdditionalImage,
           mediaAssignee: allSocialMedias.mediaAssignee,
           mediaImage: allSocialMedias.mediaImage,
+          addImage: allSocialMedias.addImage,
+          extraImage: allSocialMedias.extraImage,
           mediaStartDate: allSocialMedias.mediaStartDate,
           mediaDueDate: allSocialMedias.mediaDueDate,
           mediaStatus: allSocialMedias.mediaStatus,
@@ -548,6 +558,8 @@ exports.getSocialMediaById = async (req) => {
         mediaStatus: allSocialMedias.mediaStatus,
         mediaTimeEstimation: allSocialMedias.mediaTimeEstimation,
         mediaTime: allSocialMedias.mediaTime,
+        addImage: allSocialMedias.addImage,
+        extraImage: allSocialMedias.extraImage,
         post: allSocialMediaPost.post,
         postAssignee: allSocialMediaPost.postAssignee,
         postSetTime: allSocialMediaPost.postSetTime,
