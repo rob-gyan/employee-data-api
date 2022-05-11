@@ -650,7 +650,7 @@ exports.getSocialMediaByIdAssignee = async (req) => {
         postContentDueDate: allSocialMediaPostContent.postContentDueDate,
         dueDate: allSocialMediaPostContent.postContentDueDate,
         postContentStatus: allSocialMediaPostContent.postContentStatus,
-        sttaus: allSocialMediaPostContent.postContentStatus,
+        status: allSocialMediaPostContent.postContentStatus,
         postContentTimeEstimation:
           allSocialMediaPostContent.postContentTimeEstimation,
         media: allSocialMedias.media,

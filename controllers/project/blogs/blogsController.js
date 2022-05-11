@@ -322,7 +322,7 @@ exports.blogUpdate = async (req) => {
     });
 
     // find blog upload
-    let blogUploadFind = await BlogImage.findOne({
+    let blogUploadFind = await BlogUpload.findOne({
       where: { id: blogFind.dataValues.uploadId },
     });
 
