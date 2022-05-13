@@ -429,8 +429,9 @@ exports.getAllBlogs = async (req) => {
           allBlogTopic.topicStatus != "ONHOLD" &&
           allBlogTopic.topicStatus != "UNASSIGNED" &&
           allBlogTopic.topicStatus != "COMPLETE" &&
-          allBlogTopic.topicStatus != "PENDING" &&
-          allBlogTopic.status != "PROCESSING"
+          allBlogTopic.topicStatus != "PENDING"
+          //  &&
+          // allBlogTopic.status != "PROCESSING"
         ) {
           await allBlogTopic.update({ topicStatus: "DELAY" });
         }
@@ -450,8 +451,9 @@ exports.getAllBlogs = async (req) => {
           allBlogImage.imageStatus != "ONHOLD" &&
           allBlogImage.imageStatus != "UNASSIGNED" &&
           allBlogImage.imageStatus != "COMPLETE" &&
-          allBlogImage.imageStatus != "PENDING" &&
-          allBlogImage.imageStatus != "PROCESSING"
+          allBlogImage.imageStatus != "PENDING"
+          // &&
+          // allBlogImage.imageStatus != "PROCESSING"
         ) {
           await allBlogImage.update({ imageStatus: "DELAY" });
         }
@@ -470,8 +472,9 @@ exports.getAllBlogs = async (req) => {
           allBlogUpload.uploadStatus != "ONHOLD" &&
           allBlogUpload.uploadStatus != "UNASSIGNED" &&
           allBlogUpload.uploadStatus != "COMPLETE" &&
-          allBlogUpload.uploadStatus != "PENDING" &&
-          allBlogUpload.uploadStatus != "PROCESSING"
+          allBlogUpload.uploadStatus != "PENDING"
+          // &&
+          // allBlogUpload.uploadStatus != "PROCESSING"
         ) {
           await allBlogUpload.update({ uploadStatus: "DELAY" });
         }
