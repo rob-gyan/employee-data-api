@@ -56,6 +56,16 @@ exports.backlinkCreate = async (req) => {
       };
     }
 
+    // set dynamic status
+    let DynamicStatus;
+    if (assignee === "") {
+      DynamicStatus = "UNASSIGNED";
+    } else if (status === "") {
+      DynamicStatus = "PENDING";
+    } else {
+      DynamicStatus = status;
+    }
+
     // create backlink
     var backlinkCreate = await Backlink.create({
       type,
@@ -75,7 +85,7 @@ exports.backlinkCreate = async (req) => {
       projectId,
       taskType: "BACKLINK",
       projectName: projectFind.dataValues.projectName,
-      status: assignee === "" ? "UNASSIGNED" : status,
+      status: DynamicStatus,
     });
 
     // find type
@@ -353,6 +363,27 @@ exports.getAllBacklink = async (req) => {
     }
     // find all backlink
     let allBacklink = await Backlink.findAll({ where: { projectId } });
+    const today = (new Date().getTime() / 1000).toFixed(0).toString();
+
+    for (let ele of allBacklink) {
+      let overDate = (new Date(ele.dueDate).getTime() / 1000)
+        .toFixed(0)
+        .toString();
+
+      if (
+        overDate < today &&
+        ele.status != "ONHOLD" &&
+        ele.status != "UNASSIGNED" &&
+        ele.status != "COMPLETE" &&
+        ele.status != "PENDING"
+      ) {
+        const backLinkStatus = await Backlink.findOne({
+          where: { id: ele.id },
+        });
+        await backLinkStatus.update({ status: "DELAY" });
+      }
+    }
+
     return {
       data: allBacklink,
       error: null,

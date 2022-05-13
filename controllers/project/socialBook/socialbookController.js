@@ -65,6 +65,16 @@ exports.socialBookCreate = async (req) => {
       await SocialTag.create({ tags, projectId });
     }
 
+    // set dynamic status
+    let DynamicStatus;
+    if (assignee === "") {
+      DynamicStatus = "UNASSIGNED";
+    } else if (status === "") {
+      DynamicStatus = "PENDING";
+    } else {
+      DynamicStatus = status;
+    }
+
     // create socialBook
     var socialBookCreate = await SocialBook.create({
       urlBlog,
@@ -76,7 +86,7 @@ exports.socialBookCreate = async (req) => {
       dueDate,
       amount,
       timeEstimation,
-      status: assignee === "" ? "UNASSIGNED" : status,
+      status: DynamicStatus,
       projectId,
       time,
       taskType: "SOCIALBOOK",
@@ -188,6 +198,28 @@ exports.getAllSocialBook = async (req) => {
     }
     // find all SocialBook
     let allSocialBook = await SocialBook.findAll({ where: { projectId } });
+
+    const today = (new Date().getTime() / 1000).toFixed(0).toString();
+
+    for (let ele of allSocialBook) {
+      let overDate = (new Date(ele.dueDate).getTime() / 1000)
+        .toFixed(0)
+        .toString();
+
+      if (
+        overDate < today &&
+        ele.status != "ONHOLD" &&
+        ele.status != "UNASSIGNED" &&
+        ele.status != "COMPLETE" &&
+        ele.status != "PENDING"
+      ) {
+        const socialBookStatus = await SocialBook.findOne({
+          where: { id: ele.id },
+        });
+        await socialBookStatus.update({ status: "DELAY" });
+      }
+    }
+
     return {
       data: allSocialBook,
       error: null,

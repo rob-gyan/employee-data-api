@@ -49,6 +49,15 @@ exports.fourmCreate = async (req) => {
       };
     }
 
+    // set dynamic status
+    let DynamicStatus;
+    if (assignee === "") {
+      DynamicStatus = "UNASSIGNED";
+    } else if (status === "") {
+      DynamicStatus = "PENDING";
+    } else {
+      DynamicStatus = status;
+    }
     // create Fourm
     var fourmCreate = await Fourm.create({
       type,
@@ -62,7 +71,7 @@ exports.fourmCreate = async (req) => {
       amount,
       startDate,
       dueDate,
-      status: assignee === "" ? "UNASSIGNED" : status,
+      status: DynamicStatus,
       estimateTime,
       projectId,
       projectName: projectFind.dataValues.projectName,
@@ -214,6 +223,26 @@ exports.getAllFourms = async (req) => {
     }
     // find all Fourm
     let allFourm = await Fourm.findAll({ where: { projectId } });
+    const today = (new Date().getTime() / 1000).toFixed(0).toString();
+
+    for (let ele of allFourm) {
+      let overDate = (new Date(ele.dueDate).getTime() / 1000)
+        .toFixed(0)
+        .toString();
+
+      if (
+        overDate < today &&
+        ele.status != "ONHOLD" &&
+        ele.status != "UNASSIGNED" &&
+        ele.status != "COMPLETE" &&
+        ele.status != "PENDING"
+      ) {
+        const FourmStatus = await Fourm.findOne({
+          where: { id: ele.id },
+        });
+        await FourmStatus.update({ status: "DELAY" });
+      }
+    }
 
     return {
       data: allFourm,

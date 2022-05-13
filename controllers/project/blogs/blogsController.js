@@ -96,6 +96,16 @@ exports.blogCreate = async (req) => {
       await Upload.create({ upload });
     }
 
+    // set dynamic status
+    let DynamicTopicStatus;
+    if (uploadAssignee === "" || uploadAssignee === undefined) {
+      DynamicTopicStatus = "UNASSIGNED";
+    } else if (topicStatus === "" || topicStatus === undefined) {
+      DynamicTopicStatus = "PENDING";
+    } else {
+      DynamicTopicStatus = topicStatus;
+    }
+
     // add blog topic information
     var blogTopicCreate = await BlogTopic.create({
       topic,
@@ -104,12 +114,22 @@ exports.blogCreate = async (req) => {
       topicStartDate,
       topicDueDate,
       projectId,
-      topicStatus: topicAssignee === "" ? "UNASSIGNED" : topicStatus,
+      topicStatus: DynamicTopicStatus,
       topicTimeEstimation,
       topicTime,
       topicKeyword,
       topicExtraKeyword,
     });
+
+    // set dynamic status
+    let DynamicimageStatus;
+    if (imageAssignee === "" || imageAssignee === undefined) {
+      DynamicimageStatus = "UNASSIGNED";
+    } else if (imageStatus === "" || imageStatus === undefined) {
+      DynamicimageStatus = "PENDING";
+    } else {
+      DynamicimageStatus = imageStatus;
+    }
 
     // add blog image information
     var blogImageCreate = await BlogImage.create({
@@ -120,12 +140,22 @@ exports.blogCreate = async (req) => {
       imageStartDate,
       imageDueDate,
       projectId,
-      imageStatus: imageAssignee === "" ? "UNASSIGNED" : imageStatus,
+      imageStatus: DynamicimageStatus,
       imageTimeEstimation,
       imageTime,
       addImage,
       extraImage,
     });
+
+    // set dynamic status
+    let DynamicuploadStatus;
+    if (uploadAssignee === "" || uploadAssignee === undefined) {
+      DynamicuploadStatus = "UNASSIGNED";
+    } else if (uploadStatus === "" || uploadStatus === undefined) {
+      DynamicuploadStatus = "PENDING";
+    } else {
+      DynamicuploadStatus = uploadStatus;
+    }
 
     // add blog upload information
     var blogUploadCreate = await BlogUpload.create({
@@ -135,7 +165,7 @@ exports.blogCreate = async (req) => {
       uploadStartDate,
       uploadDueDate,
       projectId,
-      uploadStatus: uploadAssignee === "" ? "UNASSIGNED" : uploadStatus,
+      uploadStatus: DynamicuploadStatus,
       uploadTimeEstimation,
       uploadTime,
     });
@@ -156,12 +186,12 @@ exports.blogCreate = async (req) => {
       status: "PROCESSING",
     });
     // find keyword
-    let keywordFind = await Keyword.findOne({
-      where: { keyword: topicKeyword },
-    });
-    if (keywordFind == null) {
-      await Keyword.create({ keyword: topicKeyword, projectId });
-    }
+    // let keywordFind = await Keyword.findOne({
+    //   where: { keyword: topicKeyword },
+    // });
+    // if (keywordFind == null) {
+    //   await Keyword.create({ keyword: topicKeyword, projectId });
+    // }
 
     return {
       data: blogCreate,
@@ -377,20 +407,71 @@ exports.getAllBlogs = async (req) => {
     const blogLength = allBlogs.length;
 
     const allBlog = [];
+    // get today date
+    const today = (new Date().getTime() / 1000).toFixed(0).toString();
     for (let index = 0; index < blogLength; index++) {
       const element = allBlogs[index];
       const allBlogElement = [element];
-
+      // update status dynamic
       for (const ele of allBlogElement) {
         let allBlogTopic = await BlogTopic.findOne({
           where: { id: ele.topicId },
         });
+        let overTopicDate = (
+          new Date(allBlogTopic.topicDueDate).getTime() / 1000
+        )
+          .toFixed(0)
+          .toString();
+
+        if (
+          overTopicDate < today &&
+          allBlogTopic.topicStatus != "ONHOLD" &&
+          allBlogTopic.topicStatus != "ONHOLD" &&
+          allBlogTopic.topicStatus != "UNASSIGNED" &&
+          allBlogTopic.topicStatus != "COMPLETE" &&
+          allBlogTopic.topicStatus != "PENDING"
+        ) {
+          await allBlogTopic.update({ topicStatus: "DELAY" });
+        }
+
         let allBlogImage = await BlogImage.findOne({
           where: { id: ele.imageSizeId },
         });
+        // image status update dynamic
+        let overImageDate = (
+          new Date(allBlogImage.imageDueDate).getTime() / 1000
+        )
+          .toFixed(0)
+          .toString();
+        if (
+          overImageDate < today &&
+          allBlogImage.imageStatus != "ONHOLD" &&
+          allBlogImage.imageStatus != "ONHOLD" &&
+          allBlogImage.imageStatus != "UNASSIGNED" &&
+          allBlogImage.imageStatus != "COMPLETE" &&
+          allBlogImage.imageStatus != "PENDING"
+        ) {
+          await allBlogImage.update({ imageStatus: "DELAY" });
+        }
         let allBlogUpload = await BlogUpload.findOne({
           where: { id: ele.uploadId },
         });
+        // update status dynamic
+        let overuploadDate = (
+          new Date(allBlogUpload.uploadDueDate).getTime() / 1000
+        )
+          .toFixed(0)
+          .toString();
+        if (
+          overuploadDate < today &&
+          allBlogUpload.uploadStatus != "ONHOLD" &&
+          allBlogUpload.uploadStatus != "ONHOLD" &&
+          allBlogUpload.uploadStatus != "UNASSIGNED" &&
+          allBlogUpload.uploadStatus != "COMPLETE" &&
+          allBlogUpload.uploadStatus != "PENDING"
+        ) {
+          await allBlogUpload.update({ uploadStatus: "DELAY" });
+        }
 
         allBlog.push({
           id: ele.id,
@@ -399,6 +480,7 @@ exports.getAllBlogs = async (req) => {
           projectName: ele.projectName,
           topic: allBlogTopic.topic,
           taskType: ele.taskType,
+          topicId: allBlogTopic.id,
           topicWebsite: allBlogTopic.topicWebsite,
           topicStatus: allBlogTopic.topicStatus,
           topicAssignee: allBlogTopic.topicAssignee,
@@ -408,6 +490,7 @@ exports.getAllBlogs = async (req) => {
           topicKeyword: allBlogTopic.topicKeyword,
           topicExtraKeyword: allBlogTopic.topicExtraKeyword,
           imageSize: allBlogImage.imageSize,
+          imageId: allBlogImage.id,
           imageAdditionalImage: allBlogImage.imageAdditionalImage,
           imageAssignee: allBlogImage.imageAssignee,
           imageImage: allBlogImage.imageImage,
@@ -419,6 +502,7 @@ exports.getAllBlogs = async (req) => {
           addImage: allBlogImage.addImage,
           extraImage: allBlogImage.extraImage,
           upload: allBlogUpload.upload,
+          uploadId: allBlogUpload.id,
           uploadImageWithBlog: allBlogUpload.uploadImageWithBlog,
           uploadAssignee: allBlogUpload.uploadAssignee,
           uploadStartDate: allBlogUpload.uploadStartDate,
@@ -426,23 +510,9 @@ exports.getAllBlogs = async (req) => {
           uploadStatus: allBlogUpload.uploadStatus,
           uploadTimeEstimation: allBlogUpload.uploadTimeEstimation,
           uploadTime: allBlogUpload.uploadTime,
-          status:
-            allBlogTopic.topicStatus == "COMPLETE"
-              ? "COMPLETE"
-              : allBlogImage.imageStatus == "COMPLETE"
-              ? "COMPLETE"
-              : allBlogUpload.uploadStatus == "COMPLETE"
-              ? "COMPLETE"
-              : "PENDING",
         });
       }
     }
-    allBlog.map(async (data) => {
-      let blogUpdateStatus = await Blog.findOne({
-        where: { id: data.id },
-      });
-      await blogUpdateStatus.update({ status: data.status });
-    });
 
     return {
       data: allBlog,

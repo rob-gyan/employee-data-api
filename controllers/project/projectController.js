@@ -25,6 +25,15 @@ const Media = db.medias;
 const Post = db.posts;
 const AdditionalImage = db.additionalimages;
 
+// blog all table
+const BlogTopic = db.blogtopics;
+const BlogImage = db.blogimages;
+const BlogUpload = db.bloguploads;
+// social media all table
+const SocialMediaContent = db.socialmediapostcontents;
+const SocialMediaPost = db.socialmediaposts;
+const SocialMedias = db.socialmedias;
+
 // **********project create api controller**********
 exports.projectCreate = async (req) => {
   try {
@@ -154,45 +163,122 @@ exports.getAllProject = async (req) => {
 
     let allProjects = [];
     for (const element of allProject) {
+      var today = new Date();
+      var dd = String(today.getDate()).padStart(2, "0");
+      var mm = String(today.getMonth() + 1).padStart(2, "0");
+      var yyyy = today.getFullYear();
+
+      today = yyyy + "-" + mm + "-" + dd;
+      // console.log(today);
       // all completed task count
       let allBacklinkComplete = await Backlink.count({
-        where: { status: "COMPLETE", projectId: element.id },
+        where: { status: "PROCESSING", projectId: element.id, dueDate: today },
       });
-      let allBlogComplete = await Blog.count({
-        where: { status: "COMPLETE", projectId: element.id },
+      let allBlogTopicComplete = await BlogTopic.count({
+        where: {
+          topicStatus: "PROCESSING",
+          projectId: element.id,
+          topicDueDate: today,
+        },
+      });
+      let allBlogImageComplete = await BlogImage.count({
+        where: {
+          imageStatus: "PROCESSING",
+          projectId: element.id,
+          imageDueDate: today,
+        },
+      });
+      let allBlogUploadComplete = await BlogUpload.count({
+        where: {
+          uploadStatus: "PROCESSING",
+          projectId: element.id,
+          uploadDueDate: today,
+        },
+      });
+      let allPostContentCount = await SocialMediaContent.count({
+        where: {
+          postContentStatus: "PROCESSING",
+          projectId: element.id,
+          postContentDueDate: today,
+        },
+      });
+      let allMediaCount = await SocialMedias.count({
+        where: {
+          mediaStatus: "PROCESSING",
+          projectId: element.id,
+          mediaDueDate: today,
+        },
+      });
+      let allMediaPostCount = await SocialMediaPost.count({
+        where: {
+          postStatus: "PROCESSING",
+          projectId: element.id,
+          postDueDate: today,
+        },
       });
       let allFourmComplete = await Fourm.count({
-        where: { status: "COMPLETE", projectId: element.id },
+        where: { status: "PROCESSING", projectId: element.id, dueDate: today },
       });
       let allSocialBookComplete = await SocialBook.count({
-        where: { status: "COMPLETE", projectId: element.id },
+        where: { status: "PROCESSING", projectId: element.id, dueDate: today },
       });
 
       // all uncompleted task count
       let allBacklinkUnComplete = await Backlink.count({
-        where: { status: "PROCESSING", projectId: element.id },
+        where: { status: "DELAY", projectId: element.id },
       });
-      let allBlogUnComplete = await Blog.count({
-        where: { status: "PROCESSING", projectId: element.id },
+      let allBlogTopicUnComplete = await BlogTopic.count({
+        where: { topicStatus: "DELAY", projectId: element.id },
+      });
+      let allBlogImageUnComplete = await BlogImage.count({
+        where: { imageStatus: "DELAY", projectId: element.id },
+      });
+      let allBlogUploadUnComplete = await BlogUpload.count({
+        where: { uploadStatus: "DELAY", projectId: element.id },
+      });
+      let allSocialMediaUncomplete = await SocialMediaContent.count({
+        where: { postContentStatus: "DELAY", projectId: element.id },
+      });
+      let allMediaUncomplete = await SocialMedias.count({
+        where: {
+          mediaStatus: "DELAY",
+          projectId: element.id,
+        },
+      });
+      let allMediaPostUncomplete = await SocialMediaPost.count({
+        where: {
+          postStatus: "DELAY",
+          projectId: element.id,
+        },
       });
       let allFourmUnComplete = await Fourm.count({
-        where: { status: "PROCESSING", projectId: element.id },
+        where: { status: "DELAY", projectId: element.id },
       });
       let allSocialBookUnComplete = await SocialBook.count({
-        where: { status: "PROCESSING", projectId: element.id },
+        where: { status: "DELAY", projectId: element.id },
       });
       // sum of completed task
       const totalCompleted =
         allBacklinkComplete +
-        allBlogComplete +
+        allBlogTopicComplete +
+        allBlogImageComplete +
+        allBlogUploadComplete +
         allFourmComplete +
+        allPostContentCount +
+        allMediaCount +
+        allMediaPostCount +
         allSocialBookComplete;
 
       // sum of uncompleted task
       const totalUnCompleted =
         allBacklinkUnComplete +
-        allBlogUnComplete +
+        allBlogTopicUnComplete +
+        allBlogImageUnComplete +
+        allBlogUploadUnComplete +
         allFourmUnComplete +
+        allMediaUncomplete +
+        allSocialMediaUncomplete +
+        allMediaPostUncomplete +
         allSocialBookUnComplete;
 
       allProjects.push({

@@ -114,6 +114,16 @@ exports.socialMediaCreate = async (req) => {
       await Post.create({ post });
     }
 
+    // set dynamic status
+    let DynamicpostContentStatus;
+    if (postContentAssignee === "" || postContentAssignee === undefined) {
+      DynamicpostContentStatus = "UNASSIGNED";
+    } else if (postContentStatus === "" || postContentStatus === undefined) {
+      DynamicpostContentStatus = "PENDING";
+    } else {
+      DynamicpostContentStatus = postContentStatus;
+    }
+
     // add socialMediaContent topic information
     var socialMediaContentCreate = await SocialMediaContent.create({
       postContent,
@@ -123,11 +133,20 @@ exports.socialMediaCreate = async (req) => {
       postContentStartDate,
       postContentDueDate,
       projectId,
-      postContentStatus:
-        postContentAssignee === "" ? "UNASSIGNED" : postContentStatus,
+      postContentStatus: DynamicpostContentStatus,
       postContentTimeEstimation,
       postContentTime,
     });
+
+    // set dynamic status
+    let DynamicmediaStatus;
+    if (mediaAssignee === "" || mediaAssignee === undefined) {
+      DynamicmediaStatus = "UNASSIGNED";
+    } else if (mediaStatus === "" || mediaStatus === undefined) {
+      DynamicmediaStatus = "PENDING";
+    } else {
+      DynamicmediaStatus = mediaStatus;
+    }
 
     // add socialMedia  information
     var socialMediaCreate = await SocialMedia.create({
@@ -138,12 +157,22 @@ exports.socialMediaCreate = async (req) => {
       mediaStartDate,
       mediaDueDate,
       projectId,
-      mediaStatus: mediaAssignee === "" ? "UNASSIGNED" : mediaStatus,
+      mediaStatus: DynamicmediaStatus,
       mediaTimeEstimation,
       mediaTime,
       addImage,
       extraImage,
     });
+
+    // set dynamic status
+    let DynamicpostStatus;
+    if (postAssignee === "" || postAssignee === undefined) {
+      DynamicpostStatus = "UNASSIGNED";
+    } else if (postStatus === "" || postStatus === undefined) {
+      DynamicpostStatus = "PENDING";
+    } else {
+      DynamicpostStatus = postStatus;
+    }
 
     // add socialmedia post information
     var socialMediaPostCreate = await SocialMediaPost.create({
@@ -154,7 +183,7 @@ exports.socialMediaCreate = async (req) => {
       postStartDate,
       postDueDate,
       projectId,
-      postStatus: postAssignee === "" ? "UNASSIGNED" : postStatus,
+      postStatus: DynamicpostStatus,
       postTimeEstimation,
       postTime,
     });
@@ -407,6 +436,8 @@ exports.getAllSocialMedia = async (req) => {
       where: { projectId },
     });
     const socialMediaLength = allsocialMediaData.length;
+    // get today date
+    const today = (new Date().getTime() / 1000).toFixed(0).toString();
 
     const allSocialMedia = [];
     for (let index = 0; index < socialMediaLength; index++) {
@@ -417,14 +448,72 @@ exports.getAllSocialMedia = async (req) => {
         let allSocialMediaPostContent = await SocialMediaContent.findOne({
           where: { id: ele.postContentId },
         });
-        // console.log(allSocialMediaPostContent.id);
+        // social media post content status update dynamicaly
+        let overPostContentDate = (
+          new Date(allSocialMediaPostContent.postContentDueDate).getTime() /
+          1000
+        )
+          .toFixed(0)
+          .toString();
+
+        if (
+          overPostContentDate < today &&
+          allSocialMediaPostContent.postContentStatus != "ONHOLD" &&
+          allSocialMediaPostContent.postContentStatus != "ONHOLD" &&
+          allSocialMediaPostContent.postContentStatus != "UNASSIGNED" &&
+          allSocialMediaPostContent.postContentStatus != "COMPLETE" &&
+          allSocialMediaPostContent.postContentStatus != "PENDING"
+        ) {
+          await allSocialMediaPostContent.update({
+            postContentStatus: "DELAY",
+          });
+        }
+
         let allSocialMedias = await SocialMedia.findOne({
           where: { id: ele.mediaId },
         });
+        // social media MEDIA status update dynamicaly
+        let overMediaDate = (
+          new Date(allSocialMedias.mediaDueDate).getTime() / 1000
+        )
+          .toFixed(0)
+          .toString();
+
+        if (
+          overMediaDate < today &&
+          allSocialMedias.mediaStatus != "ONHOLD" &&
+          allSocialMedias.mediaStatus != "ONHOLD" &&
+          allSocialMedias.mediaStatus != "UNASSIGNED" &&
+          allSocialMedias.mediaStatus != "COMPLETE" &&
+          allSocialMedias.mediaStatus != "PENDING"
+        ) {
+          await allSocialMedias.update({
+            mediaStatus: "DELAY",
+          });
+        }
         // console.log(allSocialMedias.id);
         let allSocialMediaPost = await SocialMediaPost.findOne({
           where: { id: ele.postId },
         });
+        // social media MEDIA status update dynamicaly
+        let overPostDate = (
+          new Date(allSocialMediaPost.postDueDate).getTime() / 1000
+        )
+          .toFixed(0)
+          .toString();
+
+        if (
+          overPostDate < today &&
+          allSocialMediaPost.postStatus != "ONHOLD" &&
+          allSocialMediaPost.postStatus != "ONHOLD" &&
+          allSocialMediaPost.postStatus != "UNASSIGNED" &&
+          allSocialMediaPost.postStatus != "COMPLETE" &&
+          allSocialMediaPost.postStatus != "PENDING"
+        ) {
+          await allSocialMediaPost.update({
+            postStatus: "DELAY",
+          });
+        }
         // console.log(allSocialMediaPost.id);
         allSocialMedia.push({
           id: ele.id,
