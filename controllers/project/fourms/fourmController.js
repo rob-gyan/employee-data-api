@@ -235,7 +235,8 @@ exports.getAllFourms = async (req) => {
         ele.status != "ONHOLD" &&
         ele.status != "UNASSIGNED" &&
         ele.status != "COMPLETE" &&
-        ele.status != "PENDING"
+        ele.status != "PENDING" &&
+        ele.status != "PROCESSING"
       ) {
         const FourmStatus = await Fourm.findOne({
           where: { id: ele.id },

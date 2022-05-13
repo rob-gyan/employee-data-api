@@ -462,7 +462,8 @@ exports.getAllSocialMedia = async (req) => {
           allSocialMediaPostContent.postContentStatus != "ONHOLD" &&
           allSocialMediaPostContent.postContentStatus != "UNASSIGNED" &&
           allSocialMediaPostContent.postContentStatus != "COMPLETE" &&
-          allSocialMediaPostContent.postContentStatus != "PENDING"
+          allSocialMediaPostContent.postContentStatus != "PENDING" &&
+          allSocialMediaPostContent.postContentStatus != "PROCESSING"
         ) {
           await allSocialMediaPostContent.update({
             postContentStatus: "DELAY",
@@ -485,7 +486,8 @@ exports.getAllSocialMedia = async (req) => {
           allSocialMedias.mediaStatus != "ONHOLD" &&
           allSocialMedias.mediaStatus != "UNASSIGNED" &&
           allSocialMedias.mediaStatus != "COMPLETE" &&
-          allSocialMedias.mediaStatus != "PENDING"
+          allSocialMedias.mediaStatus != "PENDING" &&
+          allSocialMedias.mediaStatus != "PROCESSING"
         ) {
           await allSocialMedias.update({
             mediaStatus: "DELAY",
@@ -508,7 +510,8 @@ exports.getAllSocialMedia = async (req) => {
           allSocialMediaPost.postStatus != "ONHOLD" &&
           allSocialMediaPost.postStatus != "UNASSIGNED" &&
           allSocialMediaPost.postStatus != "COMPLETE" &&
-          allSocialMediaPost.postStatus != "PENDING"
+          allSocialMediaPost.postStatus != "PENDING" &&
+          allSocialMediaPost.postStatus != "PROCESSING"
         ) {
           await allSocialMediaPost.update({
             postStatus: "DELAY",

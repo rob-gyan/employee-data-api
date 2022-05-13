@@ -375,7 +375,8 @@ exports.getAllBacklink = async (req) => {
         ele.status != "ONHOLD" &&
         ele.status != "UNASSIGNED" &&
         ele.status != "COMPLETE" &&
-        ele.status != "PENDING"
+        ele.status != "PENDING" &&
+        ele.status != "PROCESSING"
       ) {
         const backLinkStatus = await Backlink.findOne({
           where: { id: ele.id },

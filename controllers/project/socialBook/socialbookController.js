@@ -211,7 +211,8 @@ exports.getAllSocialBook = async (req) => {
         ele.status != "ONHOLD" &&
         ele.status != "UNASSIGNED" &&
         ele.status != "COMPLETE" &&
-        ele.status != "PENDING"
+        ele.status != "PENDING" &&
+        ele.status != "PROCESSING"
       ) {
         const socialBookStatus = await SocialBook.findOne({
           where: { id: ele.id },
