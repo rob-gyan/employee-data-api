@@ -223,12 +223,17 @@ exports.getAllFourms = async (req) => {
     }
     // find all Fourm
     let allFourm = await Fourm.findAll({ where: { projectId } });
-    const today = (new Date().getTime() / 1000).toFixed(0).toString();
+
+    // get today date
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, "0");
+    var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+    var yyyy = today.getFullYear();
+    today = yyyy + "-" + mm + "-" + dd;
+    today = new Date(today);
 
     for (let ele of allFourm) {
-      let overDate = (new Date(ele.dueDate).getTime() / 1000)
-        .toFixed(0)
-        .toString();
+      let overDate = new Date(ele.dueDate);
 
       if (
         overDate < today &&

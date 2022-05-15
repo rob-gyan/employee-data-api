@@ -407,8 +407,15 @@ exports.getAllBlogs = async (req) => {
     const blogLength = allBlogs.length;
 
     const allBlog = [];
+
     // get today date
-    const today = (new Date().getTime() / 1000).toFixed(0).toString();
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, "0");
+    var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+    var yyyy = today.getFullYear();
+    today = yyyy + "-" + mm + "-" + dd;
+    today = new Date(today);
+
     for (let index = 0; index < blogLength; index++) {
       const element = allBlogs[index];
       const allBlogElement = [element];
@@ -417,11 +424,7 @@ exports.getAllBlogs = async (req) => {
         let allBlogTopic = await BlogTopic.findOne({
           where: { id: ele.topicId },
         });
-        let overTopicDate = (
-          new Date(allBlogTopic.topicDueDate).getTime() / 1000
-        )
-          .toFixed(0)
-          .toString();
+        let overTopicDate = new Date(allBlogTopic.topicDueDate);
 
         if (
           overTopicDate < today &&
@@ -440,11 +443,7 @@ exports.getAllBlogs = async (req) => {
           where: { id: ele.imageSizeId },
         });
         // image status update dynamic
-        let overImageDate = (
-          new Date(allBlogImage.imageDueDate).getTime() / 1000
-        )
-          .toFixed(0)
-          .toString();
+        let overImageDate = new Date(allBlogImage.imageDueDate);
         if (
           overImageDate < today &&
           allBlogImage.imageStatus != "ONHOLD" &&
@@ -461,11 +460,7 @@ exports.getAllBlogs = async (req) => {
           where: { id: ele.uploadId },
         });
         // update status dynamic
-        let overuploadDate = (
-          new Date(allBlogUpload.uploadDueDate).getTime() / 1000
-        )
-          .toFixed(0)
-          .toString();
+        let overuploadDate = new Date(allBlogUpload.uploadDueDate);
         if (
           overuploadDate < today &&
           allBlogUpload.uploadStatus != "ONHOLD" &&

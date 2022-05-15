@@ -363,21 +363,25 @@ exports.getAllBacklink = async (req) => {
     }
     // find all backlink
     let allBacklink = await Backlink.findAll({ where: { projectId } });
-    const today = (new Date().getTime() / 1000).toFixed(0).toString();
+
+    // get todate date
+    // const today = (new Date().getTime() / 1000).toFixed(0).toString();
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, "0");
+    var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+    var yyyy = today.getFullYear();
+    today = yyyy + "-" + mm + "-" + dd;
+    today = new Date(today);
 
     for (let ele of allBacklink) {
-      let overDate = (new Date(ele.dueDate).getTime() / 1000)
-        .toFixed(0)
-        .toString();
+      let overDate = new Date(ele.dueDate);
 
       if (
-        overDate < today &&
+        today > overDate &&
         ele.status != "ONHOLD" &&
         ele.status != "UNASSIGNED" &&
         ele.status != "COMPLETE" &&
         ele.status != "PENDING"
-        // &&
-        // ele.status != "PROCESSING"
       ) {
         const backLinkStatus = await Backlink.findOne({
           where: { id: ele.id },
@@ -385,7 +389,6 @@ exports.getAllBacklink = async (req) => {
         await backLinkStatus.update({ status: "DELAY" });
       }
     }
-
     return {
       data: allBacklink,
       error: null,

@@ -437,7 +437,12 @@ exports.getAllSocialMedia = async (req) => {
     });
     const socialMediaLength = allsocialMediaData.length;
     // get today date
-    const today = (new Date().getTime() / 1000).toFixed(0).toString();
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, "0");
+    var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+    var yyyy = today.getFullYear();
+    today = yyyy + "-" + mm + "-" + dd;
+    today = new Date(today);
 
     const allSocialMedia = [];
     for (let index = 0; index < socialMediaLength; index++) {
@@ -449,12 +454,9 @@ exports.getAllSocialMedia = async (req) => {
           where: { id: ele.postContentId },
         });
         // social media post content status update dynamicaly
-        let overPostContentDate = (
-          new Date(allSocialMediaPostContent.postContentDueDate).getTime() /
-          1000
-        )
-          .toFixed(0)
-          .toString();
+        let overPostContentDate = new Date(
+          allSocialMediaPostContent.postContentDueDate
+        );
 
         if (
           overPostContentDate < today &&
@@ -475,11 +477,7 @@ exports.getAllSocialMedia = async (req) => {
           where: { id: ele.mediaId },
         });
         // social media MEDIA status update dynamicaly
-        let overMediaDate = (
-          new Date(allSocialMedias.mediaDueDate).getTime() / 1000
-        )
-          .toFixed(0)
-          .toString();
+        let overMediaDate = new Date(allSocialMedias.mediaDueDate);
 
         if (
           overMediaDate < today &&
@@ -500,11 +498,7 @@ exports.getAllSocialMedia = async (req) => {
           where: { id: ele.postId },
         });
         // social media MEDIA status update dynamicaly
-        let overPostDate = (
-          new Date(allSocialMediaPost.postDueDate).getTime() / 1000
-        )
-          .toFixed(0)
-          .toString();
+        let overPostDate = new Date(allSocialMediaPost.postDueDate);
 
         if (
           overPostDate < today &&

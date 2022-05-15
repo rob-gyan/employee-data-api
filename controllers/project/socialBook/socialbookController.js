@@ -199,20 +199,25 @@ exports.getAllSocialBook = async (req) => {
     // find all SocialBook
     let allSocialBook = await SocialBook.findAll({ where: { projectId } });
 
-    const today = (new Date().getTime() / 1000).toFixed(0).toString();
+    // get today date
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, "0");
+    var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+    var yyyy = today.getFullYear();
+    today = yyyy + "-" + mm + "-" + dd;
+    today = new Date(today);
 
     for (let ele of allSocialBook) {
-      let overDate = (new Date(ele.dueDate).getTime() / 1000)
-        .toFixed(0)
-        .toString();
+      let overDate = new Date(ele.dueDate);
 
       if (
         overDate < today &&
         ele.status != "ONHOLD" &&
         ele.status != "UNASSIGNED" &&
         ele.status != "COMPLETE" &&
-        ele.status != "PENDING" &&
-        ele.status != "PROCESSING"
+        ele.status != "PENDING"
+        // &&
+        // ele.status != "PROCESSING"
       ) {
         const socialBookStatus = await SocialBook.findOne({
           where: { id: ele.id },
