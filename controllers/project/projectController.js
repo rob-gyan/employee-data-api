@@ -66,6 +66,9 @@ exports.projectCreate = async (req) => {
         checkQuestion: ele.checkQuestion,
         tool: ele.tool,
         projectId: createProject.id,
+        isEdit: "0",
+        projectName,
+        taskType: "SEOAUDIT",
       });
     }
 

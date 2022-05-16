@@ -67,6 +67,19 @@ router.post("/socialMediaByIdAssignee", auth, async (req, res) => {
   }
 });
 
+// *********update social media status api*********
+router.put("/updateSocialMediaTaskStatus", auth, async (req, res) => {
+  try {
+    let updateSocialMediaStatus =
+      await socialMediaController.updateSocialMediaTaskStatus(req);
+    let code = updateSocialMediaStatus.statusCode;
+    console.log(code);
+    res.status(code).send(updateSocialMediaStatus);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
 // *********delete SocialMedia by id api*********
 router.delete("/deleteSocialMedia", auth, async (req, res) => {
   try {

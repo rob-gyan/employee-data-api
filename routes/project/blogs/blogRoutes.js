@@ -27,6 +27,18 @@ router.patch("/updateBlog", auth, async (req, res) => {
   }
 });
 
+// *********update blog status api*********
+router.put("/updateBlogTaskStatus", auth, async (req, res) => {
+  try {
+    let updateBlogStatus = await blogsController.updateBlogTaskStatus(req);
+    let code = updateBlogStatus.statusCode;
+    console.log(code);
+    res.status(code).send(updateBlogStatus);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
 // *********get all blog api*********
 router.post("/getAllBlog", auth, async (req, res) => {
   try {

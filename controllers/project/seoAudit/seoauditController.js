@@ -25,6 +25,7 @@ exports.seoAuditUpdate = async (req) => {
       note,
       startDate,
       dueDate,
+      isEdit,
     } = req.body;
 
     let updateSeoAudit;
@@ -51,6 +52,7 @@ exports.seoAuditUpdate = async (req) => {
     if (seoAuditFind == null) {
       updateSeoAudit = await SeoAudit.create({
         projectType,
+        isEdit,
         checkQuestion,
         grading,
         assign,
@@ -85,6 +87,7 @@ exports.seoAuditUpdate = async (req) => {
         amount,
         startDate,
         dueDate,
+        isEdit,
       });
     }
     return {

@@ -377,7 +377,7 @@ exports.getAllBacklink = async (req) => {
       let overDate = new Date(ele.dueDate);
 
       if (
-        today > overDate &&
+        overDate < today &&
         ele.status != "ONHOLD" &&
         ele.status != "UNASSIGNED" &&
         ele.status != "COMPLETE" &&

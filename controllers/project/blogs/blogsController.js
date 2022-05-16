@@ -781,6 +781,115 @@ exports.getBlogByIdAssignee = async (req) => {
   }
 };
 
+// **********blog update status api controller**********
+exports.updateBlogTaskStatus = async (req) => {
+  try {
+    let { blogId, projectId, topicStatus, imageStatus, uploadStatus } =
+      req.body;
+
+    if (blogId == "" || projectId == "" || !blogId || !projectId) {
+      return {
+        data: null,
+        error: "something went wrong",
+        message: "Failed",
+        statusCode: 400,
+      };
+    }
+    if (topicStatus) {
+      // find blog
+      let findBlog = await Blog.findOne({
+        where: { id: blogId, projectId },
+      });
+      // if blog doesn't exist
+      if (findBlog == null) {
+        return {
+          data: null,
+          error: "blog  doesn't exist",
+          message: "Failed",
+          statusCode: 400,
+        };
+      }
+      let topicTask = await BlogTopic.findOne({
+        where: { id: findBlog.topicId, projectId },
+      });
+
+      // update blog
+      await topicTask.update({
+        topicStatus,
+      });
+
+      return {
+        data: "Status updated",
+        error: null,
+        message: "SUCCESS",
+        statusCode: 200,
+      };
+    } else if (imageStatus) {
+      // find blog
+      let findBlog = await Blog.findOne({
+        where: { id: blogId, projectId },
+      });
+
+      // if blog doesn't exist
+      if (findBlog == null) {
+        return {
+          data: null,
+          error: "blog  doesn't exist",
+          message: "Failed",
+          statusCode: 400,
+        };
+      }
+      let imageTask = await BlogImage.findOne({
+        where: { id: findBlog.imageSizeId, projectId },
+      });
+
+      // update blog
+      await imageTask.update({
+        imageStatus,
+      });
+
+      return {
+        data: "Status updated",
+        error: null,
+        message: "SUCCESS",
+        statusCode: 200,
+      };
+    } else if (uploadStatus) {
+      // find blog
+      let findBlog = await Blog.findOne({
+        where: { id: blogId, projectId },
+      });
+
+      // if blog doesn't exist
+      if (findBlog == null) {
+        return {
+          data: null,
+          error: "blog  doesn't exist",
+          message: "Failed",
+          statusCode: 400,
+        };
+      }
+      let uploadTask = await BlogUpload.findOne({
+        where: { id: findBlog.imageSizeId, projectId },
+      });
+
+      // update blog
+      await uploadTask.update({
+        uploadStatus,
+      });
+
+      return {
+        data: "Status updated",
+        error: null,
+        message: "SUCCESS",
+        statusCode: 200,
+      };
+    }
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+
 // **********delete Blog api by id controller**********
 exports.deleteBlog = async (req) => {
   try {

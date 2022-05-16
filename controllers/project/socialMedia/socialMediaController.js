@@ -287,7 +287,7 @@ exports.socialMediaUpdate = async (req) => {
       where: { id: socialMediaFind.dataValues.postContentId },
     });
 
-    // if blog topic doesn't exist
+    // if socialMedia topic doesn't exist
     if (socialMediaContentFind == null) {
       return {
         data: null,
@@ -386,7 +386,7 @@ exports.socialMediaUpdate = async (req) => {
       where: { id: socialMediaFind.dataValues.postId },
     });
 
-    // if blog upload doesn't exist
+    // if socialMedia upload doesn't exist
     if (socialMediaPostFind == null) {
       return {
         data: null,
@@ -409,7 +409,7 @@ exports.socialMediaUpdate = async (req) => {
     });
 
     return {
-      data: "updated blog!!",
+      data: "updated socialMedia!!",
       error: null,
       message: "SUCCESS",
       statusCode: 200,
@@ -855,6 +855,124 @@ exports.getSocialMediaByIdAssignee = async (req) => {
       message: "SUCCESS",
       statusCode: 200,
     };
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+
+// **********social media update status api controller**********
+exports.updateSocialMediaTaskStatus = async (req) => {
+  try {
+    let {
+      socialMediaId,
+      projectId,
+      postContentStatus,
+      mediaStatus,
+      postStatus,
+    } = req.body;
+
+    if (
+      socialMediaId == "" ||
+      projectId == "" ||
+      !socialMediaId ||
+      !projectId
+    ) {
+      return {
+        data: null,
+        error: "something went wrong",
+        message: "Failed",
+        statusCode: 400,
+      };
+    }
+    if (postContentStatus) {
+      // find socialMedia
+      let findSocialMedia = await SocialMediaTable.findOne({
+        where: { id: socialMediaId, projectId },
+      });
+      // if socialMedia doesn't exist
+      if (findSocialMedia == null) {
+        return {
+          data: null,
+          error: "socialMedia  doesn't exist",
+          message: "Failed",
+          statusCode: 400,
+        };
+      }
+      let postContentTask = await SocialMediaContent.findOne({
+        where: { id: findSocialMedia.postContentId, projectId },
+      });
+
+      // update socialMedia
+      await postContentTask.update({
+        postContentStatus,
+      });
+
+      return {
+        data: "Status updated",
+        error: null,
+        message: "SUCCESS",
+        statusCode: 200,
+      };
+    } else if (mediaStatus) {
+      // find socialMedia
+      let findSocialMedia = await SocialMediaTable.findOne({
+        where: { id: socialMediaId, projectId },
+      });
+      // if socialMedia doesn't exist
+      if (findSocialMedia == null) {
+        return {
+          data: null,
+          error: "socialMedia  doesn't exist",
+          message: "Failed",
+          statusCode: 400,
+        };
+      }
+      let mediaTaks = await SocialMedia.findOne({
+        where: { id: findSocialMedia.mediaId, projectId },
+      });
+
+      // update socialMedia
+      await mediaTaks.update({
+        mediaStatus,
+      });
+
+      return {
+        data: "Status updated",
+        error: null,
+        message: "SUCCESS",
+        statusCode: 200,
+      };
+    } else if (postStatus) {
+      // find socialMedia
+      let findSocialMedia = await SocialMediaTable.findOne({
+        where: { id: socialMediaId, projectId },
+      });
+
+      // if socialMedia doesn't exist
+      if (findSocialMedia == null) {
+        return {
+          data: null,
+          error: "socialMedia  doesn't exist",
+          message: "Failed",
+          statusCode: 400,
+        };
+      }
+      let postTask = await SocialMediaPost.findOne({
+        where: { id: findSocialMedia.postId, projectId },
+      });
+
+      // update socialMedia
+      await postTask.update({
+        postStatus,
+      });
+
+      return {
+        data: "Status updated",
+        error: null,
+        message: "SUCCESS",
+        statusCode: 200,
+      };
+    }
   } catch (error) {
     res.status(500).send(error.message);
   }

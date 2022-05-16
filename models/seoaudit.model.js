@@ -59,6 +59,12 @@ module.exports = (sequelize, Sequelize) => {
     dueDate: {
       type: Sequelize.TEXT,
     },
+    isEdit: {
+      type: Sequelize.TEXT,
+    },
+    projectName: {
+      type: Sequelize.TEXT,
+    },
   });
 
   return SeoAudit;
