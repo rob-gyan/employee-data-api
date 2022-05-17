@@ -72,13 +72,23 @@ exports.seoAuditUpdate = async (req) => {
         projectName: projectFind.dataValues.projectName,
       });
     } else {
+      // set dynamic status
+      let dynamicStatus;
+      if (assign === "" || assign === undefined) {
+        dynamicStatus = "UNASSIGNED";
+      } else if (status === "" || status === undefined) {
+        dynamicStatus = "PENDING";
+      } else {
+        dynamicStatus = status;
+      }
+
       // update SeoAudit
       updateSeoAudit = await seoAuditFind.update({
         grading,
         assign,
         reassign,
         date,
-        status,
+        status: dynamicStatus,
         timeEstimation,
         time,
         topKey,
