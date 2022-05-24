@@ -260,6 +260,41 @@ exports.getAllProject = async (req) => {
       let allSocialBookUnComplete = await SocialBook.count({
         where: { status: "DELAY", projectId: element.id },
       });
+
+      // all uncompleted pending task count
+      let allBacklinkUnCompletePending = await Backlink.count({
+        where: { status: "PENDING", projectId: element.id },
+      });
+      let allBlogTopicUnCompletePending = await BlogTopic.count({
+        where: { topicStatus: "PENDING", projectId: element.id },
+      });
+      let allBlogImageUnCompletePending = await BlogImage.count({
+        where: { imageStatus: "PENDING", projectId: element.id },
+      });
+      let allBlogUploadUnCompletePending = await BlogUpload.count({
+        where: { uploadStatus: "PENDING", projectId: element.id },
+      });
+      let allSocialMediaUncompletePending = await SocialMediaContent.count({
+        where: { postContentStatus: "PENDING", projectId: element.id },
+      });
+      let allMediaUncompletePending = await SocialMedias.count({
+        where: {
+          mediaStatus: "PENDING",
+          projectId: element.id,
+        },
+      });
+      let allMediaPostUncompletePending = await SocialMediaPost.count({
+        where: {
+          postStatus: "PENDING",
+          projectId: element.id,
+        },
+      });
+      let allFourmUnCompletePending = await Fourm.count({
+        where: { status: "PENDING", projectId: element.id },
+      });
+      let allSocialBookUnCompletePending = await SocialBook.count({
+        where: { status: "PENDING", projectId: element.id },
+      });
       // sum of completed task
       const totalCompleted =
         allBacklinkComplete +
@@ -282,7 +317,16 @@ exports.getAllProject = async (req) => {
         allMediaUncomplete +
         allSocialMediaUncomplete +
         allMediaPostUncomplete +
-        allSocialBookUnComplete;
+        allSocialBookUnComplete +
+        allBacklinkUnCompletePending +
+        allBlogTopicUnCompletePending +
+        allBlogImageUnCompletePending +
+        allBlogUploadUnCompletePending +
+        allSocialMediaUncompletePending +
+        allMediaUncompletePending +
+        allMediaPostUncompletePending +
+        allFourmUnCompletePending +
+        allSocialBookUnCompletePending;
 
       allProjects.push({
         id: element.id,
