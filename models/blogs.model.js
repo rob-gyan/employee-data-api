@@ -24,6 +24,9 @@ module.exports = (sequelize, Sequelize) => {
     status: {
       type: Sequelize.TEXT,
     },
+    createdBy: {
+      type: Sequelize.TEXT,
+    },
   });
 
   return Blog;

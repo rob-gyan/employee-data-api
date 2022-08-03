@@ -65,6 +65,12 @@ module.exports = (sequelize, Sequelize) => {
     projectName: {
       type: Sequelize.TEXT,
     },
+    assignedBy: {
+      type: Sequelize.TEXT,
+    },
+    createdBy: {
+      type: Sequelize.TEXT,
+    },
   });
 
   return SeoAudit;

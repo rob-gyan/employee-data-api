@@ -66,7 +66,7 @@ router.post("/getAllBacklinkByProjectId", auth, async (req, res) => {
 });
 
 // *********delete backlink by id api*********
-router.delete("/deleteBacklink", auth, async (req, res) => {
+router.post("/deleteBacklink", auth, async (req, res) => {
   try {
     let deleteBacklink = await backlinkController.deleteBacklink(req);
     let code = deleteBacklink.statusCode;

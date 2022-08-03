@@ -47,6 +47,10 @@ exports.socialMediaCreate = async (req) => {
       postTime,
       projectId,
       status,
+      createdBy,
+      mediaAssignedBy,
+      postAssignedBy,
+      postContentAssignedBy,
     } = req.body;
     if (projectId == "" || !projectId) {
       return {
@@ -98,21 +102,21 @@ exports.socialMediaCreate = async (req) => {
     }
 
     // find AdditionalImage
-    let additionalimage = await AdditionalImage.findOne({
-      where: { mediaAdditionalImage },
-    });
-    if (additionalimage == null) {
-      await AdditionalImage.create({ mediaAdditionalImage });
-    }
+    // let additionalimage = await AdditionalImage.findOne({
+    //   where: { mediaAdditionalImage },
+    // });
+    // if (additionalimage == null) {
+    //   await AdditionalImage.create({ mediaAdditionalImage });
+    // }
 
     // find Post
-    let generalPost = await Post.findOne({
-      where: { post },
-    });
+    // let generalPost = await Post.findOne({
+    //   where: { post },
+    // });
 
-    if (generalPost == null) {
-      await Post.create({ post });
-    }
+    // if (generalPost == null) {
+    //   await Post.create({ post });
+    // }
 
     // set dynamic status
     let DynamicpostContentStatus;
@@ -136,6 +140,8 @@ exports.socialMediaCreate = async (req) => {
       postContentStatus: DynamicpostContentStatus,
       postContentTimeEstimation,
       postContentTime,
+      postContentAssignedBy:
+        postContentAssignee === "" ? null : postContentAssignedBy,
     });
 
     // set dynamic status
@@ -162,6 +168,7 @@ exports.socialMediaCreate = async (req) => {
       mediaTime,
       addImage,
       extraImage,
+      mediaAssignedBy: mediaAssignee === "" ? null : mediaAssignedBy,
     });
 
     // set dynamic status
@@ -186,6 +193,7 @@ exports.socialMediaCreate = async (req) => {
       postStatus: DynamicpostStatus,
       postTimeEstimation,
       postTime,
+      postAssignedBy: postAssignee === "" ? null : postAssignedBy,
     });
 
     const postContentId = socialMediaContentCreate.dataValues.id;
@@ -202,6 +210,7 @@ exports.socialMediaCreate = async (req) => {
       taskType: "SOCIALMEDIA",
       projectName: projectFind.dataValues.projectName,
       status,
+      createdBy,
     });
 
     return {
@@ -252,6 +261,9 @@ exports.socialMediaUpdate = async (req) => {
       postTimeEstimation,
       postTime,
       status,
+      mediaAssignedBy,
+      postAssignedBy,
+      postContentAssignedBy,
     } = req.body;
 
     if (
@@ -331,13 +343,13 @@ exports.socialMediaUpdate = async (req) => {
     }
 
     // find Post
-    let generalPost = await Post.findOne({
-      where: { post },
-    });
+    // let generalPost = await Post.findOne({
+    //   where: { post },
+    // });
 
-    if (generalPost == null) {
-      await Post.create({ post });
-    }
+    // if (generalPost == null) {
+    //   await Post.create({ post });
+    // }
 
     // update socialMediaContent
     await socialMediaContentFind.update({
@@ -350,6 +362,10 @@ exports.socialMediaUpdate = async (req) => {
       postContentStatus,
       postContentTimeEstimation,
       postContentTime,
+      postContentAssignedBy:
+        socialMediaContentFind.postContentAssignee === postContentAssignee
+          ? socialMediaContentFind.postContentAssignee
+          : postContentAssignedBy,
     });
 
     // find social media
@@ -379,6 +395,10 @@ exports.socialMediaUpdate = async (req) => {
       mediaTime,
       addImage,
       extraImage,
+      mediaAssignedBy:
+        socialMediasFind.mediaAssignee === mediaAssignee
+          ? socialMediasFind.mediaAssignee
+          : mediaAssignedBy,
     });
 
     // find social media post
@@ -406,6 +426,10 @@ exports.socialMediaUpdate = async (req) => {
       postStatus,
       postTimeEstimation,
       postTime,
+      postAssignedBy:
+        socialMediaPostFind.postAssignee === postAssignee
+          ? socialMediaPostFind.postAssignee
+          : mediaAssignedBy,
     });
 
     return {
@@ -423,6 +447,7 @@ exports.socialMediaUpdate = async (req) => {
 exports.getAllSocialMedia = async (req) => {
   try {
     const { projectId } = req.body;
+
     if (projectId == "" || !projectId) {
       return {
         data: null,
@@ -464,7 +489,7 @@ exports.getAllSocialMedia = async (req) => {
           allSocialMediaPostContent.postContentStatus != "ONHOLD" &&
           allSocialMediaPostContent.postContentStatus != "UNASSIGNED" &&
           allSocialMediaPostContent.postContentStatus != "COMPLETE" &&
-          allSocialMediaPostContent.postContentStatus != "PENDING"
+          allSocialMediaPostContent.postContentStatus != "PROCESSING"
           // &&
           // allSocialMediaPostContent.postContentStatus != "PROCESSING"
         ) {
@@ -485,7 +510,7 @@ exports.getAllSocialMedia = async (req) => {
           allSocialMedias.mediaStatus != "ONHOLD" &&
           allSocialMedias.mediaStatus != "UNASSIGNED" &&
           allSocialMedias.mediaStatus != "COMPLETE" &&
-          allSocialMedias.mediaStatus != "PENDING"
+          allSocialMedias.mediaStatus != "PROCESSING"
           //  &&
           // allSocialMedias.mediaStatus != "PROCESSING"
         ) {
@@ -506,7 +531,7 @@ exports.getAllSocialMedia = async (req) => {
           allSocialMediaPost.postStatus != "ONHOLD" &&
           allSocialMediaPost.postStatus != "UNASSIGNED" &&
           allSocialMediaPost.postStatus != "COMPLETE" &&
-          allSocialMediaPost.postStatus != "PENDING"
+          allSocialMediaPost.postStatus != "PROCESSING"
           //  &&
           // allSocialMediaPost.postStatus != "PROCESSING"
         ) {
@@ -518,6 +543,7 @@ exports.getAllSocialMedia = async (req) => {
         allSocialMedia.push({
           id: ele.id,
           fileRichText: ele.fileRichText,
+          createdAt: ele.createdAt,
           postContent: allSocialMediaPostContent.postContent,
           postContentType: allSocialMediaPostContent.postContentType,
           postContentAssignee: allSocialMediaPostContent.postContentAssignee,
@@ -559,6 +585,11 @@ exports.getAllSocialMedia = async (req) => {
               : allSocialMediaPost.postStatus == "COMPLETE"
               ? "COMPLETE"
               : "PENDING",
+          mediaAssignedBy: allSocialMedias.mediaAssignedBy,
+          postAssignedBy: allSocialMediaPost.postAssignedBy,
+          postContentAssignedBy:
+            allSocialMediaPostContent.postContentAssignedBy,
+          createdBy: ele.createdBy,
         });
       }
     }
@@ -628,6 +659,7 @@ exports.getSocialMediaById = async (req) => {
       socialMediaById.push({
         id: ele.id,
         fileRichText: ele.fileRichText,
+        createdAt: ele.createdAt,
         postContent: allSocialMediaPostContent.postContent,
         postContentType: allSocialMediaPostContent.postContentType,
         postContentAssignee: allSocialMediaPostContent.postContentAssignee,
@@ -660,6 +692,11 @@ exports.getSocialMediaById = async (req) => {
         postTime: allSocialMediaPost.postTime,
         projectId: ele.projectId,
         projectName: ele.projectName,
+
+        mediaAssignedBy: allSocialMedias.mediaAssignedBy,
+        postAssignedBy: allSocialMediaPost.postAssignedBy,
+        postContentAssignedBy: allSocialMediaPostContent.postContentAssignedBy,
+        createdBy: ele.createdBy,
       });
     }
 
@@ -726,6 +763,7 @@ exports.getSocialMediaByIdAssignee = async (req) => {
 
       allAssigneeData.push({
         id: data.id,
+        createdAt: data.createdAt,
         taskType: data.taskType,
         projectId: data.projectId,
         projectName: data.projectName,
@@ -760,10 +798,16 @@ exports.getSocialMediaByIdAssignee = async (req) => {
         postStatus: allSocialMediaPost.postStatus,
         postTimeEstimation: allSocialMediaPost.postTimeEstimation,
         postTime: allSocialMediaPost.postTime,
+
+        mediaAssignedBy: allSocialMedias.mediaAssignedBy,
+        postAssignedBy: allSocialMediaPost.postAssignedBy,
+        postContentAssignedBy: allSocialMediaPostContent.postContentAssignedBy,
+        createdBy: ele.createdBy,
       });
 
       allAssigneeData.push({
         id: data.id,
+        createdAt: data.createdAt,
         taskType: data.taskType,
         projectId: data.projectId,
         projectName: data.projectName,
@@ -798,6 +842,11 @@ exports.getSocialMediaByIdAssignee = async (req) => {
         postStatus: allSocialMediaPost.postStatus,
         postTimeEstimation: allSocialMediaPost.postTimeEstimation,
         postTime: allSocialMediaPost.postTime,
+
+        mediaAssignedBy: allSocialMedias.mediaAssignedBy,
+        postAssignedBy: allSocialMediaPost.postAssignedBy,
+        postContentAssignedBy: allSocialMediaPostContent.postContentAssignedBy,
+        createdBy: ele.createdBy,
       });
 
       allAssigneeData.push({
@@ -806,6 +855,7 @@ exports.getSocialMediaByIdAssignee = async (req) => {
         projectId: data.projectId,
         projectName: data.projectName,
         fileRichText: data.fileRichText,
+        createdAt: data.createdAt,
         postContent: allSocialMediaPostContent.postContent,
         postContentType: allSocialMediaPostContent.postContentType,
         postContentAssignee: allSocialMediaPostContent.postContentAssignee,
@@ -836,6 +886,11 @@ exports.getSocialMediaByIdAssignee = async (req) => {
         status: allSocialMediaPost.postStatus,
         postTimeEstimation: allSocialMediaPost.postTimeEstimation,
         postTime: allSocialMediaPost.postTime,
+
+        mediaAssignedBy: allSocialMedias.mediaAssignedBy,
+        postAssignedBy: allSocialMediaPost.postAssignedBy,
+        postContentAssignedBy: allSocialMediaPostContent.postContentAssignedBy,
+        createdBy: ele.createdBy,
       });
     }
 
@@ -968,6 +1023,135 @@ exports.updateSocialMediaTaskStatus = async (req) => {
 
       return {
         data: "Status updated",
+        error: null,
+        message: "SUCCESS",
+        statusCode: 200,
+      };
+    }
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+// **********social media update time api controller**********
+exports.updateSocialMediaTaskTime = async (req) => {
+  try {
+    let { socialMediaId, projectId, postContentTime, mediaTime, postTime } =
+      req.body;
+
+    if (
+      socialMediaId == "" ||
+      projectId == "" ||
+      !socialMediaId ||
+      !projectId
+    ) {
+      return {
+        data: null,
+        error: "something went wrong",
+        message: "Failed",
+        statusCode: 400,
+      };
+    }
+    if (postContentTime) {
+      // find socialMedia
+      let findSocialMedia = await SocialMediaTable.findOne({
+        where: { id: socialMediaId, projectId },
+      });
+      // if socialMedia doesn't exist
+      if (findSocialMedia == null) {
+        return {
+          data: null,
+          error: "socialMedia  doesn't exist",
+          message: "Failed",
+          statusCode: 400,
+        };
+      }
+      let postContentTask = await SocialMediaContent.findOne({
+        where: { id: findSocialMedia.postContentId, projectId },
+      });
+      const prevTime =
+        postContentTask.postContentTime == "" ||
+        postContentTask.postContentTime === null
+          ? 0
+          : postContentTask.postContentTime;
+      const updateTime = parseInt(prevTime) + parseInt(postContentTime);
+
+      // update socialMedia
+      await postContentTask.update({
+        postContentTime: updateTime,
+      });
+
+      return {
+        data: "Time updated",
+        error: null,
+        message: "SUCCESS",
+        statusCode: 200,
+      };
+    } else if (mediaTime) {
+      // find socialMedia
+      let findSocialMedia = await SocialMediaTable.findOne({
+        where: { id: socialMediaId, projectId },
+      });
+      // if socialMedia doesn't exist
+      if (findSocialMedia == null) {
+        return {
+          data: null,
+          error: "socialMedia  doesn't exist",
+          message: "Failed",
+          statusCode: 400,
+        };
+      }
+      let mediaTaks = await SocialMedia.findOne({
+        where: { id: findSocialMedia.mediaId, projectId },
+      });
+
+      const prevTime =
+        mediaTaks.mediaTime == "" || mediaTaks.mediaTime === null
+          ? 0
+          : mediaTaks.mediaTime;
+      const updateTime = parseInt(prevTime) + parseInt(mediaTime);
+
+      // update socialMedia
+      await mediaTaks.update({
+        mediaTime: updateTime,
+      });
+
+      return {
+        data: "Time updated",
+        error: null,
+        message: "SUCCESS",
+        statusCode: 200,
+      };
+    } else if (postTime) {
+      // find socialMedia
+      let findSocialMedia = await SocialMediaTable.findOne({
+        where: { id: socialMediaId, projectId },
+      });
+
+      // if socialMedia doesn't exist
+      if (findSocialMedia == null) {
+        return {
+          data: null,
+          error: "socialMedia  doesn't exist",
+          message: "Failed",
+          statusCode: 400,
+        };
+      }
+      let postTask = await SocialMediaPost.findOne({
+        where: { id: findSocialMedia.postId, projectId },
+      });
+      const prevTime =
+        postTask.postTime == "" || postTask.postTime === null
+          ? 0
+          : postTask.postTime;
+      const updateTime = parseInt(prevTime) + parseInt(postTime);
+
+      // update socialMedia
+      await postTask.update({
+        postTime: updateTime,
+      });
+
+      return {
+        data: "Time updated",
         error: null,
         message: "SUCCESS",
         statusCode: 200,

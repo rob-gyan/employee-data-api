@@ -1,36 +1,30 @@
 module.exports = (sequelize, Sequelize) => {
-  const BlogUpload = sequelize.define("bloguploads", {
-    upload: {
+  const DevelopmentDiscussion = sequelize.define("developmentdiscussions", {
+    message: {
       type: Sequelize.TEXT,
     },
-    uploadImageWithBlog: {
+    imageUrl: {
       type: Sequelize.TEXT,
     },
-    uploadAssignee: {
-      type: Sequelize.TEXT,
-    },
-    uploadStartDate: {
-      type: Sequelize.TEXT,
-    },
-    uploadDueDate: {
+    userId: {
       type: Sequelize.TEXT,
     },
     projectId: {
       type: Sequelize.TEXT,
     },
-    uploadStatus: {
+    userEmailId: {
       type: Sequelize.TEXT,
     },
-    uploadTimeEstimation: {
+    taskType: {
       type: Sequelize.TEXT,
     },
-    uploadTime: {
+    taskTypeId: {
       type: Sequelize.TEXT,
     },
-    uploadAssignedBy: {
+    seoAuditQuestion: {
       type: Sequelize.TEXT,
     },
   });
 
-  return BlogUpload;
+  return DevelopmentDiscussion;
 };

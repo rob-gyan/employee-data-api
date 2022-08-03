@@ -175,7 +175,11 @@ exports.getAllProject = async (req) => {
       // console.log(today);
       // all completed task count
       let allBacklinkComplete = await Backlink.count({
-        where: { status: "PROCESSING", projectId: element.id, dueDate: today },
+        where: {
+          status: "PROCESSING",
+          projectId: element.id,
+          // dueDate: today,
+        },
       });
       let allBlogTopicComplete = await BlogTopic.count({
         where: {
@@ -188,42 +192,58 @@ exports.getAllProject = async (req) => {
         where: {
           imageStatus: "PROCESSING",
           projectId: element.id,
-          imageDueDate: today,
+          // imageDueDate: today,
         },
       });
       let allBlogUploadComplete = await BlogUpload.count({
         where: {
           uploadStatus: "PROCESSING",
           projectId: element.id,
-          uploadDueDate: today,
+          // uploadDueDate: today,
         },
       });
       let allPostContentCount = await SocialMediaContent.count({
         where: {
           postContentStatus: "PROCESSING",
           projectId: element.id,
-          postContentDueDate: today,
+          // postContentDueDate: today,
         },
       });
       let allMediaCount = await SocialMedias.count({
         where: {
           mediaStatus: "PROCESSING",
           projectId: element.id,
-          mediaDueDate: today,
+          // mediaDueDate: today,
         },
       });
       let allMediaPostCount = await SocialMediaPost.count({
         where: {
           postStatus: "PROCESSING",
           projectId: element.id,
-          postDueDate: today,
+          // postDueDate: today,
         },
       });
       let allFourmComplete = await Fourm.count({
-        where: { status: "PROCESSING", projectId: element.id, dueDate: today },
+        where: {
+          status: "PROCESSING",
+          projectId: element.id,
+          // dueDate: today,
+        },
       });
       let allSocialBookComplete = await SocialBook.count({
-        where: { status: "PROCESSING", projectId: element.id, dueDate: today },
+        where: {
+          status: "PROCESSING",
+          projectId: element.id,
+          // dueDate: today,
+        },
+      });
+      let allSeoAuditComplete = await SeoAudit.count({
+        where: {
+          status: "PROCESSING",
+          projectId: element.id,
+          // dueDate: today,
+          isEdit: 1,
+        },
       });
 
       // all uncompleted task count
@@ -260,6 +280,13 @@ exports.getAllProject = async (req) => {
       let allSocialBookUnComplete = await SocialBook.count({
         where: { status: "DELAY", projectId: element.id },
       });
+      let allSeoAuditUnComplete = await SeoAudit.count({
+        where: {
+          status: "DELAY",
+          projectId: element.id,
+          isEdit: 1,
+        },
+      });
 
       // all uncompleted pending task count
       let allBacklinkUnCompletePending = await Backlink.count({
@@ -295,6 +322,13 @@ exports.getAllProject = async (req) => {
       let allSocialBookUnCompletePending = await SocialBook.count({
         where: { status: "PENDING", projectId: element.id },
       });
+      let allSeoAuditUnCompletePending = await SeoAudit.count({
+        where: {
+          status: "PENDING",
+          projectId: element.id,
+          isEdit: 1,
+        },
+      });
       // sum of completed task
       const totalCompleted =
         allBacklinkComplete +
@@ -305,7 +339,8 @@ exports.getAllProject = async (req) => {
         allPostContentCount +
         allMediaCount +
         allMediaPostCount +
-        allSocialBookComplete;
+        allSocialBookComplete +
+        allSeoAuditComplete;
 
       // sum of uncompleted task
       const totalUnCompleted =
@@ -326,7 +361,290 @@ exports.getAllProject = async (req) => {
         allMediaUncompletePending +
         allMediaPostUncompletePending +
         allFourmUnCompletePending +
-        allSocialBookUnCompletePending;
+        allSocialBookUnCompletePending +
+        allSeoAuditUnComplete +
+        allSeoAuditUnCompletePending;
+
+      allProjects.push({
+        id: element.id,
+        projectName: element.projectName,
+        description: element.description,
+        clientCompany: element.clientCompany,
+        projectCreater: element.projectCreater,
+        status: element.status,
+        createdAt: element.createdAt,
+        updatedAt: element.updatedAt,
+        completedTaskCount: totalCompleted,
+        uncompletedTaskCount: totalUnCompleted,
+      });
+    }
+
+    return {
+      data: allProjects,
+      error: null,
+      message: "SUCCESS",
+      statusCode: 200,
+    };
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+// **********get all project api controller**********
+exports.getAllProjectEmployeeTask = async (req) => {
+  try {
+    const { user } = req.body;
+    console.log(user, "***********************");
+    // find all project
+    let allProject = await Project.findAll();
+
+    let allProjects = [];
+    for (const element of allProject) {
+      var today = new Date();
+      var dd = String(today.getDate()).padStart(2, "0");
+      var mm = String(today.getMonth() + 1).padStart(2, "0");
+      var yyyy = today.getFullYear();
+
+      today = yyyy + "-" + mm + "-" + dd;
+      // console.log(today);
+      // all completed task count
+      let allBacklinkComplete = await Backlink.count({
+        where: {
+          status: "PROCESSING",
+          projectId: element.id,
+          // dueDate: today,
+          assignee: user,
+        },
+      });
+      let allBlogTopicComplete = await BlogTopic.count({
+        where: {
+          topicStatus: "PROCESSING",
+          projectId: element.id,
+          // topicDueDate: today,
+          topicAssignee: user,
+        },
+      });
+      let allBlogImageComplete = await BlogImage.count({
+        where: {
+          imageStatus: "PROCESSING",
+          projectId: element.id,
+          // imageDueDate: today,
+          imageAssignee: user,
+        },
+      });
+      let allBlogUploadComplete = await BlogUpload.count({
+        where: {
+          uploadStatus: "PROCESSING",
+          projectId: element.id,
+          // uploadDueDate: today,
+          uploadAssignee: user,
+        },
+      });
+      let allPostContentCount = await SocialMediaContent.count({
+        where: {
+          postContentStatus: "PROCESSING",
+          projectId: element.id,
+          // postContentDueDate: today,
+          postContentAssignee: user,
+        },
+      });
+      let allMediaCount = await SocialMedias.count({
+        where: {
+          mediaStatus: "PROCESSING",
+          projectId: element.id,
+          // mediaDueDate: today,
+          mediaAssignee: user,
+        },
+      });
+      let allMediaPostCount = await SocialMediaPost.count({
+        where: {
+          postStatus: "PROCESSING",
+          projectId: element.id,
+          // postDueDate: today,
+          postAssignee: user,
+        },
+      });
+      let allFourmComplete = await Fourm.count({
+        where: {
+          status: "PROCESSING",
+          projectId: element.id,
+          // dueDate: today,
+          assignee: user,
+        },
+      });
+      let allSocialBookComplete = await SocialBook.count({
+        where: {
+          status: "PROCESSING",
+          projectId: element.id,
+          // dueDate: today,
+          assignee: user,
+        },
+      });
+      let allSeoAuditComplete = await SeoAudit.count({
+        where: {
+          status: "PROCESSING",
+          projectId: element.id,
+          // dueDate: today,
+          isEdit: 1,
+          assign: user,
+        },
+      });
+
+      // all uncompleted task count
+      let allBacklinkUnComplete = await Backlink.count({
+        where: { status: "DELAY", projectId: element.id, assignee: user },
+      });
+      let allBlogTopicUnComplete = await BlogTopic.count({
+        where: {
+          topicStatus: "DELAY",
+          projectId: element.id,
+          topicAssignee: user,
+        },
+      });
+      let allBlogImageUnComplete = await BlogImage.count({
+        where: {
+          imageStatus: "DELAY",
+          projectId: element.id,
+          imageAssignee: user,
+        },
+      });
+      let allBlogUploadUnComplete = await BlogUpload.count({
+        where: {
+          uploadStatus: "DELAY",
+          projectId: element.id,
+          uploadAssignee: user,
+        },
+      });
+      let allSocialMediaUncomplete = await SocialMediaContent.count({
+        where: {
+          postContentStatus: "DELAY",
+          projectId: element.id,
+          postContentAssignee: user,
+        },
+      });
+      let allMediaUncomplete = await SocialMedias.count({
+        where: {
+          mediaStatus: "DELAY",
+          projectId: element.id,
+          mediaAssignee: user,
+        },
+      });
+      let allMediaPostUncomplete = await SocialMediaPost.count({
+        where: {
+          postStatus: "DELAY",
+          projectId: element.id,
+          postAssignee: user,
+        },
+      });
+      let allFourmUnComplete = await Fourm.count({
+        where: { status: "DELAY", projectId: element.id, assignee: user },
+      });
+      let allSocialBookUnComplete = await SocialBook.count({
+        where: { status: "DELAY", projectId: element.id, assignee: user },
+      });
+      let allSeoAuditUnComplete = await SeoAudit.count({
+        where: {
+          status: "DELAY",
+          projectId: element.id,
+          isEdit: 1,
+          assign: user,
+        },
+      });
+
+      // all uncompleted pending task count
+      let allBacklinkUnCompletePending = await Backlink.count({
+        where: { status: "PENDING", projectId: element.id, assignee: user },
+      });
+      let allBlogTopicUnCompletePending = await BlogTopic.count({
+        where: {
+          topicStatus: "PENDING",
+          projectId: element.id,
+          topicAssignee: user,
+        },
+      });
+      let allBlogImageUnCompletePending = await BlogImage.count({
+        where: {
+          imageStatus: "PENDING",
+          projectId: element.id,
+          imageAssignee: user,
+        },
+      });
+      let allBlogUploadUnCompletePending = await BlogUpload.count({
+        where: {
+          uploadStatus: "PENDING",
+          projectId: element.id,
+          uploadAssignee: user,
+        },
+      });
+      let allSocialMediaUncompletePending = await SocialMediaContent.count({
+        where: {
+          postContentStatus: "PENDING",
+          projectId: element.id,
+          postContentAssignee: user,
+        },
+      });
+      let allMediaUncompletePending = await SocialMedias.count({
+        where: {
+          mediaStatus: "PENDING",
+          projectId: element.id,
+          mediaAssignee: user,
+        },
+      });
+      let allMediaPostUncompletePending = await SocialMediaPost.count({
+        where: {
+          postStatus: "PENDING",
+          projectId: element.id,
+          postAssignee: user,
+        },
+      });
+      let allFourmUnCompletePending = await Fourm.count({
+        where: { status: "PENDING", projectId: element.id, assignee: user },
+      });
+      let allSocialBookUnCompletePending = await SocialBook.count({
+        where: { status: "PENDING", projectId: element.id, assignee: user },
+      });
+      let allSeoAuditUnCompletePending = await SeoAudit.count({
+        where: {
+          status: "PENDING",
+          projectId: element.id,
+          isEdit: 1,
+          assign: user,
+        },
+      });
+      // sum of completed task
+      const totalCompleted =
+        allBacklinkComplete +
+        allBlogTopicComplete +
+        allBlogImageComplete +
+        allBlogUploadComplete +
+        allFourmComplete +
+        allPostContentCount +
+        allMediaCount +
+        allMediaPostCount +
+        allSocialBookComplete +
+        allSeoAuditComplete;
+
+      // sum of uncompleted task
+      const totalUnCompleted =
+        allBacklinkUnComplete +
+        allBlogTopicUnComplete +
+        allBlogImageUnComplete +
+        allBlogUploadUnComplete +
+        allFourmUnComplete +
+        allMediaUncomplete +
+        allSocialMediaUncomplete +
+        allMediaPostUncomplete +
+        allSocialBookUnComplete +
+        allBacklinkUnCompletePending +
+        allBlogTopicUnCompletePending +
+        allBlogImageUnCompletePending +
+        allBlogUploadUnCompletePending +
+        allSocialMediaUncompletePending +
+        allMediaUncompletePending +
+        allMediaPostUncompletePending +
+        allFourmUnCompletePending +
+        allSocialBookUnCompletePending +
+        allSeoAuditUnComplete +
+        allSeoAuditUnCompletePending;
 
       allProjects.push({
         id: element.id,
@@ -376,9 +694,16 @@ exports.getAllProjectTask = async (req) => {
   try {
     // find all backlinks
     let allBacklink = await Backlink.findAll();
-    let allBlog = await Blog.findAll();
+    // let allBlog = await Blog.findAll();
+    let allBlogTopic = await BlogTopic.findAll();
+    let allBlogImage = await BlogImage.findAll();
+    let allBlogUpload = await BlogUpload.findAll();
     let allFourm = await Fourm.findAll();
     let allSocialBook = await SocialBook.findAll();
+    let allSocialMediaContent = await SocialMediaContent.findAll();
+    let allSocialMedias = await SocialMedias.findAll();
+    let allSocialMediaPost = await SocialMediaPost.findAll();
+    let allSeoAudit = await SeoAudit.findAll({ where: { isEdit: "1" } });
 
     let allProjectTask = [];
     allBacklink.map((i) => {
@@ -392,15 +717,81 @@ exports.getAllProjectTask = async (req) => {
         status: i.dataValues.status,
       });
     });
-    allBlog.map((i) => {
+    allSeoAudit.map((i) => {
       allProjectTask.push({
         id: i.dataValues.id,
         taskType: i.dataValues.taskType,
         projectId: i.dataValues.projectId,
         projectName: i.dataValues.projectName,
-        assignee: i.dataValues.assignee,
+        assignee: i.dataValues.assign,
         dueDate: i.dataValues.dueDate,
         status: i.dataValues.status,
+      });
+    });
+    allBlogTopic.map((i) => {
+      allProjectTask.push({
+        id: i.dataValues.id,
+        taskType: "BLOG",
+        projectId: i.dataValues.projectId,
+        projectName: i.dataValues.projectName,
+        assignee: i.dataValues.topicAssignee,
+        dueDate: i.dataValues.topicDueDate,
+        status: i.dataValues.topicStatus,
+      });
+    });
+    allBlogUpload.map((i) => {
+      allProjectTask.push({
+        id: i.dataValues.id,
+        taskType: "BLOG",
+        projectId: i.dataValues.projectId,
+        projectName: i.dataValues.projectName,
+        assignee: i.dataValues.uploadAssignee,
+        dueDate: i.dataValues.uploadDueDate,
+        status: i.dataValues.uploadStatus,
+      });
+    });
+    allBlogImage.map((i) => {
+      allProjectTask.push({
+        id: i.dataValues.id,
+        taskType: "BLOG",
+        projectId: i.dataValues.projectId,
+        projectName: i.dataValues.projectName,
+        assignee: i.dataValues.imageAssignee,
+        dueDate: i.dataValues.imageDueDate,
+        status: i.dataValues.imageStatus,
+      });
+    });
+    allSocialMediaContent.map((i) => {
+      allProjectTask.push({
+        id: i.dataValues.id,
+        taskType: "SOCIALMEDIA",
+        projectId: i.dataValues.projectId,
+        projectName: i.dataValues.projectName,
+        assignee: i.dataValues.postContentAssignee,
+        dueDate: i.dataValues.postContentDueDate,
+        status: i.dataValues.postContentStatus,
+      });
+    });
+    allSocialMedias.map((i) => {
+      allProjectTask.push({
+        id: i.dataValues.id,
+        taskType: "SOCIALMEDIA",
+        projectId: i.dataValues.projectId,
+        projectName: i.dataValues.projectName,
+        assignee: i.dataValues.mediaAssignee,
+        dueDate: i.dataValues.mediaDueDate,
+        status: i.dataValues.mediaStatus,
+      });
+    });
+    allSocialMediaPost.map((i) => {
+      allProjectTask.push({
+        id: i.dataValues.id,
+        taskType: "SOCIALMEDIA",
+        projectId: i.dataValues.projectId,
+        projectName: i.dataValues.projectName,
+        assignee: i.dataValues.postAssignee,
+        dueDate: i.dataValues.postDueDate,
+        status: i.dataValues.postStatus,
       });
     });
     allFourm.map((i) => {
@@ -435,7 +826,7 @@ exports.getAllProjectTask = async (req) => {
           id: ele.id,
           taskType: ele.taskType,
           projectId: ele.projectId,
-          projectName: ele.projectName,
+          projectName: data.projectName,
           assignee: ele.assignee,
           dueDate: ele.dueDate,
           status: ele.status,
@@ -465,10 +856,23 @@ exports.getAllProjectTaskById = async (req) => {
 
     // find all task on the basis of projectId
     let allBacklink = await Backlink.findAll({ where: { projectId } });
-    let allBlog = await Blog.findAll({ where: { projectId } });
+    let allBlogTopic = await BlogTopic.findAll({ where: { projectId } });
+    let allBlogImage = await BlogImage.findAll({ where: { projectId } });
+    let allBlogUpload = await BlogUpload.findAll({ where: { projectId } });
     let allFourm = await Fourm.findAll({ where: { projectId } });
     let allSocialBook = await SocialBook.findAll({ where: { projectId } });
-    let allSocialMedia = await SocialMedia.findAll({ where: { projectId } });
+
+    let allSocialMediaContent = await SocialMediaContent.findAll({
+      where: { projectId },
+    });
+    let allSocialMedias = await SocialMedias.findAll({ where: { projectId } });
+    let allSocialMediaPost = await SocialMediaPost.findAll({
+      where: { projectId },
+    });
+
+    let allSeoAudit = await SeoAudit.findAll({
+      where: { projectId, isEdit: "1" },
+    });
 
     let allProjectTaskById = [];
     allBacklink.map((i) => {
@@ -482,9 +886,10 @@ exports.getAllProjectTaskById = async (req) => {
         status: i.dataValues.status,
       });
     });
-    allBlog.map((i) => {
+    allSeoAudit.map((i) => {
       allProjectTaskById.push({
         id: i.dataValues.id,
+        assignee: i.dataValues.assign,
         taskType: i.dataValues.taskType,
         projectId: i.dataValues.projectId,
         projectName: i.dataValues.projectName,
@@ -492,9 +897,77 @@ exports.getAllProjectTaskById = async (req) => {
         status: i.dataValues.status,
       });
     });
+    allBlogTopic.map((i) => {
+      allProjectTaskById.push({
+        id: i.dataValues.id,
+        taskType: "BLOG",
+        projectId: i.dataValues.projectId,
+        projectName: i.dataValues.projectName,
+        assignee: i.dataValues.topicAssignee,
+        dueDate: i.dataValues.topicDueDate,
+        status: i.dataValues.topicStatus,
+      });
+    });
+    allBlogUpload.map((i) => {
+      allProjectTaskById.push({
+        id: i.dataValues.id,
+        taskType: "BLOG",
+        projectId: i.dataValues.projectId,
+        projectName: i.dataValues.projectName,
+        assignee: i.dataValues.uploadAssignee,
+        dueDate: i.dataValues.uploadDueDate,
+        status: i.dataValues.uploadStatus,
+      });
+    });
+    allBlogImage.map((i) => {
+      allProjectTaskById.push({
+        id: i.dataValues.id,
+        taskType: "BLOG",
+        projectId: i.dataValues.projectId,
+        projectName: i.dataValues.projectName,
+        assignee: i.dataValues.imageAssignee,
+        dueDate: i.dataValues.imageDueDate,
+        status: i.dataValues.imageStatus,
+      });
+    });
+    allSocialMediaContent.map((i) => {
+      allProjectTaskById.push({
+        id: i.dataValues.id,
+        taskType: "SOCIALMEDIA",
+        projectId: i.dataValues.projectId,
+        projectName: i.dataValues.projectName,
+        assignee: i.dataValues.postContentAssignee,
+        dueDate: i.dataValues.postContentDueDate,
+        status: i.dataValues.postContentStatus,
+      });
+    });
+    allSocialMedias.map((i) => {
+      allProjectTaskById.push({
+        id: i.dataValues.id,
+        taskType: "SOCIALMEDIA",
+        projectId: i.dataValues.projectId,
+        projectName: i.dataValues.projectName,
+        assignee: i.dataValues.mediaAssignee,
+        dueDate: i.dataValues.mediaDueDate,
+        status: i.dataValues.mediaStatus,
+      });
+    });
+    allSocialMediaPost.map((i) => {
+      allProjectTaskById.push({
+        id: i.dataValues.id,
+        taskType: "SOCIALMEDIA",
+        projectId: i.dataValues.projectId,
+        projectName: i.dataValues.projectName,
+        assignee: i.dataValues.postAssignee,
+        dueDate: i.dataValues.postDueDate,
+        status: i.dataValues.postStatus,
+      });
+    });
+
     allFourm.map((i) => {
       allProjectTaskById.push({
         id: i.dataValues.id,
+        assignee: i.dataValues.assignee,
         taskType: i.dataValues.taskType,
         projectId: i.dataValues.projectId,
         projectName: i.dataValues.projectName,
@@ -506,6 +979,7 @@ exports.getAllProjectTaskById = async (req) => {
     allSocialBook.map((i) => {
       allProjectTaskById.push({
         id: i.dataValues.id,
+        assignee: i.dataValues.assignee,
         taskType: i.dataValues.taskType,
         projectId: i.dataValues.projectId,
         projectName: i.dataValues.projectName,
@@ -514,19 +988,421 @@ exports.getAllProjectTaskById = async (req) => {
       });
     });
 
-    allSocialMedia.map((i) => {
-      allProjectTaskById.push({
-        id: i.dataValues.id,
-        taskType: i.dataValues.taskType,
-        projectId: i.dataValues.projectId,
-        projectName: i.dataValues.projectName,
-        dueDate: i.dataValues.dueDate,
-        status: i.dataValues.status,
-      });
-    });
+    // allSocialMedia.map((i) => {
+    //   allProjectTaskById.push({
+    //     id: i.dataValues.id,
+    //     taskType: i.dataValues.taskType,
+    //     projectId: i.dataValues.projectId,
+    //     projectName: i.dataValues.projectName,
+    //     dueDate: i.dataValues.dueDate,
+    //     status: i.dataValues.status,
+    //   });
+    // });
+
+    const newArray = [];
+    for (ele of allProjectTaskById) {
+      let allProject = await Project.findAll({ where: { id: ele.projectId } });
+
+      for (data of allProject) {
+        newArray.push({
+          id: ele.id,
+          taskType: ele.taskType,
+          projectId: ele.projectId,
+          projectName: data.projectName,
+          assignee: ele.assignee,
+          dueDate: ele.dueDate,
+          status: ele.status,
+          createdAt: data.createdAt,
+          projectCreater: data.projectCreater,
+        });
+      }
+
+      // console.log(allProject);
+    }
 
     return {
-      data: allProjectTaskById,
+      data: newArray,
+      error: null,
+      message: "SUCCESS",
+      statusCode: 200,
+    };
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+// **********get all project task on the basis of projectId and userid api controller**********
+exports.getAllProjectTaskUserById = async (req) => {
+  try {
+    const { projectId, user } = req.body;
+
+    // find all task on the basis of projectId
+    let allBacklink = await Backlink.findAll({
+      where: { projectId, assignee: user },
+    });
+    let allBlogTopic = await BlogTopic.findAll({
+      where: { projectId, topicAssignee: user },
+    });
+    let allBlogImage = await BlogImage.findAll({
+      where: { projectId, imageAssignee: user },
+    });
+    let allBlogUpload = await BlogUpload.findAll({
+      where: { projectId, uploadAssignee: user },
+    });
+    let allFourm = await Fourm.findAll({
+      where: { projectId, assignee: user },
+    });
+    let allSocialBook = await SocialBook.findAll({
+      where: { projectId, assignee: user },
+    });
+
+    let allSocialMediaContent = await SocialMediaContent.findAll({
+      where: { projectId, postContentAssignee: user },
+    });
+    let allSocialMedias = await SocialMedias.findAll({
+      where: { projectId, mediaAssignee: user },
+    });
+    let allSocialMediaPost = await SocialMediaPost.findAll({
+      where: { projectId, postAssignee: user },
+    });
+
+    let allSeoAudit = await SeoAudit.findAll({
+      where: { projectId, assign: user, isEdit: "1" },
+    });
+
+    let allProjectTaskById = [];
+    allBacklink.map((i) => {
+      allProjectTaskById.push({
+        id: i.dataValues.id,
+        assignee: i.dataValues.assignee,
+        taskType: i.dataValues.taskType,
+        projectId: i.dataValues.projectId,
+        projectName: i.dataValues.projectName,
+        dueDate: i.dataValues.dueDate,
+        status: i.dataValues.status,
+      });
+    });
+    allSeoAudit.map((i) => {
+      allProjectTaskById.push({
+        id: i.dataValues.id,
+        assignee: i.dataValues.assign,
+        taskType: i.dataValues.taskType,
+        projectId: i.dataValues.projectId,
+        projectName: i.dataValues.projectName,
+        dueDate: i.dataValues.dueDate,
+        status: i.dataValues.status,
+      });
+    });
+    allBlogTopic.map((i) => {
+      allProjectTaskById.push({
+        id: i.dataValues.id,
+        taskType: "BLOG",
+        projectId: i.dataValues.projectId,
+        projectName: i.dataValues.projectName,
+        assignee: i.dataValues.topicAssignee,
+        dueDate: i.dataValues.topicDueDate,
+        status: i.dataValues.topicStatus,
+      });
+    });
+    allBlogUpload.map((i) => {
+      allProjectTaskById.push({
+        id: i.dataValues.id,
+        taskType: "BLOG",
+        projectId: i.dataValues.projectId,
+        projectName: i.dataValues.projectName,
+        assignee: i.dataValues.uploadAssignee,
+        dueDate: i.dataValues.uploadDueDate,
+        status: i.dataValues.uploadStatus,
+      });
+    });
+    allBlogImage.map((i) => {
+      allProjectTaskById.push({
+        id: i.dataValues.id,
+        taskType: "BLOG",
+        projectId: i.dataValues.projectId,
+        projectName: i.dataValues.projectName,
+        assignee: i.dataValues.imageAssignee,
+        dueDate: i.dataValues.imageDueDate,
+        status: i.dataValues.imageStatus,
+      });
+    });
+    allSocialMediaContent.map((i) => {
+      allProjectTaskById.push({
+        id: i.dataValues.id,
+        taskType: "SOCIALMEDIA",
+        projectId: i.dataValues.projectId,
+        projectName: i.dataValues.projectName,
+        assignee: i.dataValues.postContentAssignee,
+        dueDate: i.dataValues.postContentDueDate,
+        status: i.dataValues.postContentStatus,
+      });
+    });
+    allSocialMedias.map((i) => {
+      allProjectTaskById.push({
+        id: i.dataValues.id,
+        taskType: "SOCIALMEDIA",
+        projectId: i.dataValues.projectId,
+        projectName: i.dataValues.projectName,
+        assignee: i.dataValues.mediaAssignee,
+        dueDate: i.dataValues.mediaDueDate,
+        status: i.dataValues.mediaStatus,
+      });
+    });
+    allSocialMediaPost.map((i) => {
+      allProjectTaskById.push({
+        id: i.dataValues.id,
+        taskType: "SOCIALMEDIA",
+        projectId: i.dataValues.projectId,
+        projectName: i.dataValues.projectName,
+        assignee: i.dataValues.postAssignee,
+        dueDate: i.dataValues.postDueDate,
+        status: i.dataValues.postStatus,
+      });
+    });
+
+    allFourm.map((i) => {
+      allProjectTaskById.push({
+        id: i.dataValues.id,
+        assignee: i.dataValues.assignee,
+        taskType: i.dataValues.taskType,
+        projectId: i.dataValues.projectId,
+        projectName: i.dataValues.projectName,
+        dueDate: i.dataValues.dueDate,
+        status: i.dataValues.status,
+      });
+    });
+
+    allSocialBook.map((i) => {
+      allProjectTaskById.push({
+        id: i.dataValues.id,
+        assignee: i.dataValues.assignee,
+        taskType: i.dataValues.taskType,
+        projectId: i.dataValues.projectId,
+        projectName: i.dataValues.projectName,
+        dueDate: i.dataValues.dueDate,
+        status: i.dataValues.status,
+      });
+    });
+
+    // allSocialMedia.map((i) => {
+    //   allProjectTaskById.push({
+    //     id: i.dataValues.id,
+    //     taskType: i.dataValues.taskType,
+    //     projectId: i.dataValues.projectId,
+    //     projectName: i.dataValues.projectName,
+    //     dueDate: i.dataValues.dueDate,
+    //     status: i.dataValues.status,
+    //   });
+    // });
+
+    const newArray = [];
+    for (ele of allProjectTaskById) {
+      let allProject = await Project.findAll({ where: { id: ele.projectId } });
+
+      for (data of allProject) {
+        newArray.push({
+          id: ele.id,
+          taskType: ele.taskType,
+          projectId: ele.projectId,
+          projectName: data.projectName,
+          assignee: ele.assignee,
+          dueDate: ele.dueDate,
+          status: ele.status,
+          createdAt: data.createdAt,
+          projectCreater: data.projectCreater,
+        });
+      }
+
+      // console.log(allProject);
+    }
+
+    return {
+      data: newArray,
+      error: null,
+      message: "SUCCESS",
+      statusCode: 200,
+    };
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+// **********get project task on the basis of projectId api controller**********
+exports.getAllProjectTaskByUser = async (req) => {
+  try {
+    const { user } = req.body;
+
+    // find all task on the basis of projectId
+    let allBacklink = await Backlink.findAll({
+      where: { assignee: user },
+    });
+    let allBlogTopic = await BlogTopic.findAll({
+      where: { topicAssignee: user },
+    });
+    let allBlogImage = await BlogImage.findAll({
+      where: { imageAssignee: user },
+    });
+    let allBlogUpload = await BlogUpload.findAll({
+      where: { uploadAssignee: user },
+    });
+    let allFourm = await Fourm.findAll({
+      where: { assignee: user },
+    });
+    let allSocialBook = await SocialBook.findAll({
+      where: { assignee: user },
+    });
+
+    let allSocialMediaContent = await SocialMediaContent.findAll({
+      where: { postContentAssignee: user },
+    });
+    let allSocialMedias = await SocialMedias.findAll({
+      where: { mediaAssignee: user },
+    });
+    let allSocialMediaPost = await SocialMediaPost.findAll({
+      where: { postAssignee: user },
+    });
+
+    let allSeoAudit = await SeoAudit.findAll({
+      where: { assign: user, isEdit: "1" },
+    });
+
+    let allProjectTaskById = [];
+
+    await allBacklink.map((i) => {
+      allProjectTaskById.push({
+        id: i.dataValues.id,
+        assignee: i.dataValues.assignee,
+        taskType: i.dataValues.taskType,
+        projectId: i.dataValues.projectId,
+        projectName: i.dataValues.projectName,
+        dueDate: i.dataValues.dueDate,
+        status: i.dataValues.status,
+      });
+    });
+    await allSeoAudit.map((i) => {
+      allProjectTaskById.push({
+        id: i.dataValues.id,
+        assignee: i.dataValues.assign,
+        taskType: i.dataValues.taskType,
+        projectId: i.dataValues.projectId,
+        projectName: i.dataValues.projectName,
+        dueDate: i.dataValues.dueDate,
+        status: i.dataValues.status,
+      });
+    });
+    await allBlogTopic.map((i) => {
+      allProjectTaskById.push({
+        id: i.dataValues.id,
+        taskType: "BLOG",
+        projectId: i.dataValues.projectId,
+        projectName: i.dataValues.projectName,
+        assignee: i.dataValues.topicAssignee,
+        dueDate: i.dataValues.topicDueDate,
+        status: i.dataValues.topicStatus,
+      });
+    });
+    await allBlogUpload.map((i) => {
+      allProjectTaskById.push({
+        id: i.dataValues.id,
+        taskType: "BLOG",
+        projectId: i.dataValues.projectId,
+        projectName: i.dataValues.projectName,
+        assignee: i.dataValues.uploadAssignee,
+        dueDate: i.dataValues.uploadDueDate,
+        status: i.dataValues.uploadStatus,
+      });
+    });
+    await allBlogImage.map((i) => {
+      allProjectTaskById.push({
+        id: i.dataValues.id,
+        taskType: "BLOG",
+        projectId: i.dataValues.projectId,
+        projectName: i.dataValues.projectName,
+        assignee: i.dataValues.imageAssignee,
+        dueDate: i.dataValues.imageDueDate,
+        status: i.dataValues.imageStatus,
+      });
+    });
+    await allSocialMediaContent.map((i) => {
+      allProjectTaskById.push({
+        id: i.dataValues.id,
+        taskType: "SOCIALMEDIA",
+        projectId: i.dataValues.projectId,
+        projectName: i.dataValues.projectName,
+        assignee: i.dataValues.postContentAssignee,
+        dueDate: i.dataValues.postContentDueDate,
+        status: i.dataValues.postContentStatus,
+      });
+    });
+    await allSocialMedias.map((i) => {
+      allProjectTaskById.push({
+        id: i.dataValues.id,
+        taskType: "SOCIALMEDIA",
+        projectId: i.dataValues.projectId,
+        projectName: i.dataValues.projectName,
+        assignee: i.dataValues.mediaAssignee,
+        dueDate: i.dataValues.mediaDueDate,
+        status: i.dataValues.mediaStatus,
+      });
+    });
+    await allSocialMediaPost.map((i) => {
+      allProjectTaskById.push({
+        id: i.dataValues.id,
+        taskType: "SOCIALMEDIA",
+        projectId: i.dataValues.projectId,
+        projectName: i.dataValues.projectName,
+        assignee: i.dataValues.postAssignee,
+        dueDate: i.dataValues.postDueDate,
+        status: i.dataValues.postStatus,
+      });
+    });
+
+    await allFourm.map((i) => {
+      allProjectTaskById.push({
+        id: i.dataValues.id,
+        assignee: i.dataValues.assignee,
+        taskType: i.dataValues.taskType,
+        projectId: i.dataValues.projectId,
+        projectName: i.dataValues.projectName,
+        dueDate: i.dataValues.dueDate,
+        status: i.dataValues.status,
+      });
+    });
+
+    await allSocialBook.map((i) => {
+      allProjectTaskById.push({
+        id: i.dataValues.id,
+        assignee: i.dataValues.assignee,
+        taskType: i.dataValues.taskType,
+        projectId: i.dataValues.projectId,
+        projectName: i.dataValues.projectName,
+        dueDate: i.dataValues.dueDate,
+        status: i.dataValues.status,
+      });
+    });
+
+    const newArray = [];
+
+    for (ele of allProjectTaskById) {
+      let allProject = await Project.findAll({ where: { id: ele.projectId } });
+
+      for (data of allProject) {
+        newArray.push({
+          id: ele.id,
+          taskType: ele.taskType,
+          projectId: ele.projectId,
+          projectName: data.projectName,
+          assignee: ele.assignee,
+          dueDate: ele.dueDate,
+          status: ele.status,
+          createdAt: data.createdAt,
+          projectCreater: data.projectCreater,
+        });
+      }
+
+      // console.log(allProject);
+    }
+
+    return {
+      data: newArray,
       error: null,
       message: "SUCCESS",
       statusCode: 200,
@@ -536,7 +1412,7 @@ exports.getAllProjectTaskById = async (req) => {
   }
 };
 
-// **********get task on the basis of projectId,backlinkId and taskType **********
+// **********get task on the basis of projectId, and taskType **********
 exports.getHomeTask = async (req) => {
   const { id, projectId, taskType } = req.body;
   try {

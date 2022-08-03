@@ -38,6 +38,9 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.JSON,
       defaultValue: JSON.stringify(),
     },
+    mediaAssignedBy: {
+      type: Sequelize.TEXT,
+    },
   });
   return SocialMedia;
 };

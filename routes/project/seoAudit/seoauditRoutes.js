@@ -66,7 +66,7 @@ router.post("/getSeoAuditTaskById", auth, async (req, res) => {
 });
 
 // *********delete SeoAudit by id api*********
-router.delete("/deleteSeoAudit", auth, async (req, res) => {
+router.post("/deleteSeoAudit", auth, async (req, res) => {
   try {
     let deleteSeoAudit = await seoAuditController.deleteSeoAudit(req);
     let code = deleteSeoAudit.statusCode;

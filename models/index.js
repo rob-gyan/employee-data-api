@@ -103,6 +103,24 @@ db.socialmediaposts = require("./socialMediaTable/post.model.js")(
 );
 // ******socialmedia related table end*****
 
+// development all model
+db.designs = require("./development/design.model.js")(sequelize, Sequelize);
+db.developments = require("./development/development.model.js")(
+  sequelize,
+  Sequelize
+);
+db.rdtasks = require("./development/r-and-d.model.js")(sequelize, Sequelize);
+db.testings = require("./development/testing.model.js")(sequelize, Sequelize);
+db.developmentdiscussions =
+  require("./development/development-discussion.model.js")(
+    sequelize,
+    Sequelize
+  );
+db.developmentproject = require("./development/development-project.model.js")(
+  sequelize,
+  Sequelize
+);
+
 // create table if not exist in our database
 db.sequelize
   .sync({ force: false })

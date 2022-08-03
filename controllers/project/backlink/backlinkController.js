@@ -30,6 +30,8 @@ exports.backlinkCreate = async (req) => {
       time,
       projectId,
       status,
+      assignedBy,
+      createdBy,
     } = req.body;
 
     if (projectId == "" || !projectId) {
@@ -55,7 +57,7 @@ exports.backlinkCreate = async (req) => {
         statusCode: 400,
       };
     }
-
+    console.log(assignee === "");
     // set dynamic status
     let DynamicStatus;
     if (assignee === "") {
@@ -79,27 +81,22 @@ exports.backlinkCreate = async (req) => {
       startDate,
       dueDate,
       assignee,
-      amount,
+      amount: !amount ? 0 : amount,
       timeEstimation,
       time,
       projectId,
       taskType: "BACKLINK",
       projectName: projectFind.dataValues.projectName,
       status: DynamicStatus,
+      createdBy: createdBy,
+      assignedBy: assignee === "" ? null : assignedBy,
     });
-
-    // find type
-    let urlFind = await Url.findOne({
-      where: { url },
-    });
-    if (urlFind == null) {
-      await Url.create({ url });
-    }
 
     // find type
     let typeFind = await Type.findOne({
       where: { type },
     });
+
     if (typeFind == null) {
       await Type.create({ type });
     }
@@ -134,6 +131,15 @@ exports.backlinkCreate = async (req) => {
     if (keywordFind == null) {
       await Keyword.create({ keyword: keywordGroup, projectId });
     }
+    // find type
+    if (url) {
+      let urlFind = await Url.findOne({
+        where: { url },
+      });
+      if (urlFind == null) {
+        await Url.create({ url });
+      }
+    }
 
     return {
       data: backlinkCreate,
@@ -167,6 +173,7 @@ exports.backlinkUpdate = async (req) => {
       time,
       status,
       extraKeyword,
+      assignedBy,
     } = req.body;
     if (backlinkId == "" || projectId == "" || !backlinkId || !projectId) {
       return {
@@ -206,6 +213,7 @@ exports.backlinkUpdate = async (req) => {
     if (typeFind == null) {
       await Type.create({ type });
     }
+
     // find category
     let categoryFind = await Category.findOne({
       where: { category },
@@ -246,6 +254,10 @@ exports.backlinkUpdate = async (req) => {
       time,
       extraKeyword,
       status,
+      assignedBy:
+        backlinkFind.assignee === assignee
+          ? backlinkFind.assignedBy
+          : assignedBy,
     });
 
     return {
@@ -332,10 +344,15 @@ exports.backlinkUpdateTime = async (req) => {
         statusCode: 400,
       };
     }
+    const prevTime =
+      backlinkFind.time == "" || backlinkFind.time === null
+        ? 0
+        : backlinkFind.time;
+    const updateTime = parseInt(prevTime) + parseInt(time);
 
     // update backlink
     await backlinkFind.update({
-      time,
+      time: updateTime,
     });
 
     return {
@@ -381,7 +398,7 @@ exports.getAllBacklink = async (req) => {
         ele.status != "ONHOLD" &&
         ele.status != "UNASSIGNED" &&
         ele.status != "COMPLETE" &&
-        ele.status != "PENDING"
+        ele.status != "PROCESSING"
       ) {
         const backLinkStatus = await Backlink.findOne({
           where: { id: ele.id },

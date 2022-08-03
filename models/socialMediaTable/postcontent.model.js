@@ -30,6 +30,9 @@ module.exports = (sequelize, Sequelize) => {
     postContentTime: {
       type: Sequelize.TEXT,
     },
+    postContentAssignedBy: {
+      type: Sequelize.TEXT,
+    },
   });
   return SocialMediaPostContent;
 };

@@ -1,6 +1,6 @@
 var express = require("express");
 const auth = require("../../middleware/auth");
-var projectController = require("../../controllers/project/projectController");
+var projectController = require("../../controllers/development-project/projectController");
 var router = express.Router();
 
 // *********create project api*********
@@ -56,7 +56,7 @@ router.get("/getAllProject", auth, async (req, res) => {
 });
 
 // *********get all project task api*********
-router.get("/getAllProjectTask", auth, async (req, res) => {
+router.get("/getAllProjectTask", async (req, res) => {
   try {
     let getEmployeeProject = await projectController.getAllProjectTask(req);
     let code = getEmployeeProject.statusCode;
@@ -170,10 +170,10 @@ router.post("/deleteKeyword", auth, async (req, res) => {
 });
 
 // get all General fields
-router.post("/getAllGeneralField", async (req, res) => {
+router.post("/getAllAssignee", async (req, res) => {
   try {
-    let getAllGeneralField = await projectController.getAllGeneralField(req);
-    res.status(200).send(getAllGeneralField);
+    let getAllAssignee = await projectController.getAllAssignee(req);
+    res.status(200).send(getAllAssignee);
   } catch (error) {
     res.status(500).send(error);
   }

@@ -7,7 +7,7 @@ var cookieParser = require("cookie-parser");
 var csrf = require("csurf");
 const fileUpload = require("express-fileupload");
 
-// all routes
+// all routes digital marketing
 const userRoutes = require("./routes/user/userRoutes");
 const projectRoutes = require("./routes/project/projectRoutes");
 const backlinkRoutes = require("./routes/project/backlink/backlinkRoutes");
@@ -17,6 +17,14 @@ const discussionRoutes = require("./routes/project/discussion/discussionRoutes")
 const socialBookRoutes = require("./routes/project/socialBook/socialbookRoutes");
 const socialMediaRoutes = require("./routes/project/socialMedia/socialMediaRoutes");
 const seoRouteRoutes = require("./routes/project/seoAudit/seoauditRoutes");
+
+// all routes development
+const developmentProjectRoutes = require("./routes/development-project/projectRoutes");
+const designRoutes = require("./routes/development-project/design/designRoutes");
+const rdTaskRoutes = require("./routes/development-project/rd-tasks/rdTasks");
+const developmentRoutes = require("./routes/development-project/development/developmentRoutes");
+const testingRoutes = require("./routes/development-project/testing/testingRoutes");
+const developmentDiscussionRoutes = require("./routes/development-project/development-discussion/discussionRoutes");
 
 const app = express();
 app.use(
@@ -64,6 +72,14 @@ app.use("/api/v1", discussionRoutes);
 app.use("/api/v1", socialBookRoutes);
 app.use("/api/v1", socialMediaRoutes);
 app.use("/api/v1", seoRouteRoutes);
+
+// all development routes path
+app.use("/api/v1/development", developmentProjectRoutes);
+app.use("/api/v1/development", developmentDiscussionRoutes);
+app.use("/api/v1/development", designRoutes);
+app.use("/api/v1/development", rdTaskRoutes);
+app.use("/api/v1/development", developmentRoutes);
+app.use("/api/v1/development", testingRoutes);
 
 app.listen(config.port, () => {
   console.log("app listening on url http://localhost:" + config.port);

@@ -34,6 +34,9 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.JSON,
       defaultValue: JSON.stringify(),
     },
+    topicAssignedBy: {
+      type: Sequelize.TEXT,
+    },
   });
 
   return BlogTopic;

@@ -5,6 +5,7 @@ const Category = db.categories;
 const Keyword = db.keywords;
 const Profile = db.profiles;
 const Project = db.projects;
+const Type = db.types;
 
 // **********Fourm create api controller**********
 exports.fourmCreate = async (req) => {
@@ -24,6 +25,8 @@ exports.fourmCreate = async (req) => {
       estimateTime,
       projectId,
       extraKeyword,
+      assignedBy,
+      createdBy,
     } = req.body;
     if (projectId == "" || !projectId) {
       return {
@@ -68,7 +71,7 @@ exports.fourmCreate = async (req) => {
       url,
       liveLinks,
       assignee,
-      amount,
+      amount: !amount ? 0 : amount,
       startDate,
       dueDate,
       status: DynamicStatus,
@@ -76,7 +79,17 @@ exports.fourmCreate = async (req) => {
       projectId,
       projectName: projectFind.dataValues.projectName,
       taskType: "FOURM",
+      createdBy: createdBy,
+      assignedBy: assignee === "" ? null : assignedBy,
     });
+    // find type
+    let typeFind = await Type.findOne({
+      where: { type },
+    });
+
+    if (typeFind == null) {
+      await Type.create({ type });
+    }
     // find category
     let categoryFind = await Category.findOne({
       where: { category },
@@ -132,6 +145,7 @@ exports.fourmUpdate = async (req) => {
       dueDate,
       status,
       estimateTime,
+      assignedBy,
     } = req.body;
 
     if (fourmId == "" || projectId == "" || !fourmId || !projectId) {
@@ -155,6 +169,14 @@ exports.fourmUpdate = async (req) => {
         message: "Failed",
         statusCode: 400,
       };
+    }
+    // find type
+    let typeFind = await Type.findOne({
+      where: { type },
+    });
+
+    if (typeFind == null) {
+      await Type.create({ type });
     }
     // find category
     let categoryFind = await Category.findOne({
@@ -196,6 +218,8 @@ exports.fourmUpdate = async (req) => {
       status,
       estimateTime,
       extraKeyword,
+      assignedBy:
+        fourmFind.assignee === assignee ? fourmFind.assignedBy : assignedBy,
     });
 
     return {
@@ -240,7 +264,7 @@ exports.getAllFourms = async (req) => {
         ele.status != "ONHOLD" &&
         ele.status != "UNASSIGNED" &&
         ele.status != "COMPLETE" &&
-        ele.status != "PENDING"
+        ele.status != "PROCESSING"
         // &&
         // ele.status != "PROCESSING"
       ) {
@@ -362,9 +386,14 @@ exports.fourmUpdateTime = async (req) => {
       };
     }
 
+    const prevTime =
+      fourmFind.time == "" || fourmFind.time === null ? 0 : fourmFind.time;
+
+    const updateTime = parseInt(prevTime) + parseInt(time);
+
     // update fourm
     await fourmFind.update({
-      time,
+      time: updateTime,
     });
 
     return {

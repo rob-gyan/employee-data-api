@@ -38,6 +38,17 @@ router.put("/updateBlogTaskStatus", auth, async (req, res) => {
     res.status(500).send(error);
   }
 });
+// *********update blog time api*********
+router.put("/updateBlogTaskTime", auth, async (req, res) => {
+  try {
+    let updateBlogTime = await blogsController.updateBlogTimer(req);
+    let code = updateBlogTime.statusCode;
+    console.log(code);
+    res.status(code).send(updateBlogTime);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
 
 // *********get all blog api*********
 router.post("/getAllBlog", auth, async (req, res) => {
@@ -75,7 +86,7 @@ router.post("/getBlogByIdAssignee", auth, async (req, res) => {
 });
 
 // *********delete Blog by id api*********
-router.delete("/deleteBlog", auth, async (req, res) => {
+router.post("/deleteBlog", auth, async (req, res) => {
   try {
     let deleteBlog = await blogsController.deleteBlog(req);
     let code = deleteBlog.statusCode;

@@ -1,43 +1,31 @@
 module.exports = (sequelize, Sequelize) => {
-  const Fourm = sequelize.define("fourms", {
-    fourms: {
+  const Design = sequelize.define("design", {
+    task: {
       type: Sequelize.TEXT,
     },
     type: {
       type: Sequelize.TEXT,
     },
-    category: {
-      type: Sequelize.TEXT,
-    },
-    keywordGroup: {
-      type: Sequelize.TEXT,
-    },
-    profile: {
-      type: Sequelize.TEXT,
-    },
-    url: {
-      type: Sequelize.TEXT,
-    },
-    liveLinks: {
+    referenceLiveLinks: {
       type: Sequelize.JSON,
       defaultValue: JSON.stringify(),
     },
+    amount: {
+      type: Sequelize.TEXT,
+    },
+    xdLink: {
+      type: Sequelize.TEXT,
+    },
     assignee: {
+      type: Sequelize.TEXT,
+    },
+    requestAssignee: {
       type: Sequelize.TEXT,
     },
     startDate: {
       type: Sequelize.TEXT,
     },
     dueDate: {
-      type: Sequelize.TEXT,
-    },
-    status: {
-      type: Sequelize.TEXT,
-    },
-    estimateTime: {
-      type: Sequelize.TEXT,
-    },
-    amount: {
       type: Sequelize.TEXT,
     },
     projectId: {
@@ -49,12 +37,14 @@ module.exports = (sequelize, Sequelize) => {
     taskType: {
       type: Sequelize.TEXT,
     },
-    time: {
+    status: {
       type: Sequelize.TEXT,
     },
-    extraKeyword: {
-      type: Sequelize.JSON,
-      defaultValue: JSON.stringify(),
+    note: {
+      type: Sequelize.TEXT,
+    },
+    timeEstimation: {
+      type: Sequelize.TEXT,
     },
     assignedBy: {
       type: Sequelize.TEXT,
@@ -63,5 +53,6 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.TEXT,
     },
   });
-  return Fourm;
+
+  return Design;
 };

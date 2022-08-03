@@ -57,6 +57,12 @@ module.exports = (sequelize, Sequelize) => {
     time: {
       type: Sequelize.TEXT,
     },
+    assignedBy: {
+      type: Sequelize.TEXT,
+    },
+    createdBy: {
+      type: Sequelize.TEXT,
+    },
   });
 
   return Backlinktable;

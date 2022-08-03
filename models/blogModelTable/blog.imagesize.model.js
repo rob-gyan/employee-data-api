@@ -38,6 +38,9 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.JSON,
       defaultValue: JSON.stringify(),
     },
+    imageAssignedBy: {
+      type: Sequelize.TEXT,
+    },
   });
   return BlogImage;
 };

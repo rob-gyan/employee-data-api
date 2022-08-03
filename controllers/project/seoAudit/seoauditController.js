@@ -565,9 +565,9 @@ exports.showCompetitionApi = async (req) => {
 // **********delete SeoAudit api by id controller**********
 exports.deleteSeoAudit = async (req) => {
   try {
-    let { seoAuditId } = req.body;
-    let deleteSeoAudit = await SeoAudit.destroy({
-      where: { id: seoAuditId },
+    let { seoAuditQues, projectId } = req.body;
+    let deleteSeoAudit = await SeoAudit.findOne({
+      where: { checkQuestion: seoAuditQues, projectId: projectId },
     });
 
     // if SeoAudit doesn't exist
@@ -579,6 +579,10 @@ exports.deleteSeoAudit = async (req) => {
         statusCode: 400,
       };
     }
+    // update seoAudit
+    await deleteSeoAudit.update({
+      isEdit: 0,
+    });
 
     return {
       data: deleteSeoAudit,

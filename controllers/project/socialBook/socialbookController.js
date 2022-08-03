@@ -21,6 +21,8 @@ exports.socialBookCreate = async (req) => {
       status,
       projectId,
       time,
+      assignedBy,
+      createdBy,
     } = req.body;
 
     if (projectId == "" || !projectId) {
@@ -84,13 +86,15 @@ exports.socialBookCreate = async (req) => {
       assignee,
       startDate,
       dueDate,
-      amount,
+      amount: !amount ? 0 : amount,
       timeEstimation,
       status: DynamicStatus,
       projectId,
       time,
       taskType: "SOCIALBOOK",
       projectName: projectFind.dataValues.projectName,
+      createdBy: createdBy,
+      assignedBy: assignee === "" ? null : assignedBy,
     });
 
     return {
@@ -120,6 +124,7 @@ exports.socialBookUpdate = async (req) => {
       dueDate,
       timeEstimation,
       status,
+      assignedBy,
     } = req.body;
 
     if (socialBookId == "" || projectId == "" || !socialBookId || !projectId) {
@@ -171,6 +176,10 @@ exports.socialBookUpdate = async (req) => {
       dueDate,
       timeEstimation,
       status,
+      assignedBy:
+        socialBookFind.assignee === assignee
+          ? socialBookFind.assignedBy
+          : assignedBy,
     });
 
     return {
@@ -215,7 +224,7 @@ exports.getAllSocialBook = async (req) => {
         ele.status != "ONHOLD" &&
         ele.status != "UNASSIGNED" &&
         ele.status != "COMPLETE" &&
-        ele.status != "PENDING"
+        ele.status != "PROCESSING"
         // &&
         // ele.status != "PROCESSING"
       ) {
@@ -306,10 +315,15 @@ exports.socialBookUpdateTime = async (req) => {
         statusCode: 400,
       };
     }
+    const prevTime =
+      socialBookFind.time == "" || socialBookFind.time === null
+        ? 0
+        : socialBookFind.time;
+    const updateTime = parseInt(prevTime) + parseInt(time);
 
     // update socialBook
     await socialBookFind.update({
-      time,
+      time: updateTime,
     });
 
     return {

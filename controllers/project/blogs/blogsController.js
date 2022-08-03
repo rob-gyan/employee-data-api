@@ -45,6 +45,10 @@ exports.blogCreate = async (req) => {
       projectId,
       addImage,
       extraImage,
+      createdBy,
+      imageAssignedBy,
+      topicAssignedBy,
+      uploadAssignedBy,
     } = req.body;
 
     if (projectId == "" || !projectId) {
@@ -88,17 +92,17 @@ exports.blogCreate = async (req) => {
       await ImageSize.create({ imageSize });
     }
 
-    // find upload
-    let urlUpload = await Upload.findOne({
-      where: { upload },
-    });
-    if (urlUpload == null) {
-      await Upload.create({ upload });
-    }
+    // // find upload
+    // let urlUpload = await Upload.findOne({
+    //   where: { upload },
+    // });
+    // if (urlUpload == null) {
+    //   await Upload.create({ upload });
+    // }
 
     // set dynamic status
     let DynamicTopicStatus;
-    if (uploadAssignee === "" || uploadAssignee === undefined) {
+    if (topicAssignee === "" || topicAssignee === undefined) {
       DynamicTopicStatus = "UNASSIGNED";
     } else if (topicStatus === "" || topicStatus === undefined) {
       DynamicTopicStatus = "PENDING";
@@ -119,6 +123,7 @@ exports.blogCreate = async (req) => {
       topicTime,
       topicKeyword,
       topicExtraKeyword,
+      topicAssignedBy: topicAssignee === "" ? null : topicAssignedBy,
     });
 
     // set dynamic status
@@ -145,6 +150,7 @@ exports.blogCreate = async (req) => {
       imageTime,
       addImage,
       extraImage,
+      imageAssignedBy: imageAssignee === "" ? null : imageAssignedBy,
     });
 
     // set dynamic status
@@ -168,6 +174,7 @@ exports.blogCreate = async (req) => {
       uploadStatus: DynamicuploadStatus,
       uploadTimeEstimation,
       uploadTime,
+      uploadAssignedBy: uploadAssignee === "" ? null : uploadAssignedBy,
     });
 
     const topicId = blogTopicCreate.dataValues.id;
@@ -184,6 +191,7 @@ exports.blogCreate = async (req) => {
       taskType: "BLOG",
       projectName: projectFind.dataValues.projectName,
       status: "PROCESSING",
+      createdBy,
     });
     // find keyword
     // let keywordFind = await Keyword.findOne({
@@ -240,6 +248,9 @@ exports.blogUpdate = async (req) => {
       addImage,
       extraImage,
       topicExtraKeyword,
+      imageAssignedBy,
+      topicAssignedBy,
+      uploadAssignedBy,
     } = req.body;
 
     if (blogId == "" || projectId == "" || !blogId || !projectId) {
@@ -300,12 +311,12 @@ exports.blogUpdate = async (req) => {
     }
 
     // find upload
-    let urlUpload = await Upload.findOne({
-      where: { upload },
-    });
-    if (urlUpload == null) {
-      await Upload.create({ upload });
-    }
+    // let urlUpload = await Upload.findOne({
+    //   where: { upload },
+    // });
+    // if (urlUpload == null) {
+    //   await Upload.create({ upload });
+    // }
 
     // update blog topic
     await blogTopicFind.update({
@@ -319,6 +330,10 @@ exports.blogUpdate = async (req) => {
       topicTimeEstimation,
       topicKeyword,
       topicExtraKeyword,
+      topicAssignedBy:
+        blogTopicFind.topicAssignee === topicAssignee
+          ? blogTopicFind.topicAssignedBy
+          : topicAssignedBy,
     });
 
     // find blog imageSize
@@ -349,6 +364,10 @@ exports.blogUpdate = async (req) => {
       imageTime,
       addImage,
       extraImage,
+      imageAssignedBy:
+        blogImageSizeFind.imageAssignee === imageAssignee
+          ? blogImageSizeFind.imageAssignedBy
+          : imageAssignedBy,
     });
 
     // find blog upload
@@ -376,6 +395,10 @@ exports.blogUpdate = async (req) => {
       uploadTimeEstimation,
       uploadTime,
       uploadStatus,
+      uploadAssignedBy:
+        blogUploadFind.uploadAssignee === uploadAssignee
+          ? blogUploadFind.uploadAssignedBy
+          : uploadAssignedBy,
     });
 
     return {
@@ -432,7 +455,7 @@ exports.getAllBlogs = async (req) => {
           allBlogTopic.topicStatus != "ONHOLD" &&
           allBlogTopic.topicStatus != "UNASSIGNED" &&
           allBlogTopic.topicStatus != "COMPLETE" &&
-          allBlogTopic.topicStatus != "PENDING"
+          allBlogTopic.topicStatus != "PROCESSING"
           //  &&
           // allBlogTopic.status != "PROCESSING"
         ) {
@@ -450,7 +473,7 @@ exports.getAllBlogs = async (req) => {
           allBlogImage.imageStatus != "ONHOLD" &&
           allBlogImage.imageStatus != "UNASSIGNED" &&
           allBlogImage.imageStatus != "COMPLETE" &&
-          allBlogImage.imageStatus != "PENDING"
+          allBlogImage.imageStatus != "PROCESSING"
           // &&
           // allBlogImage.imageStatus != "PROCESSING"
         ) {
@@ -467,7 +490,7 @@ exports.getAllBlogs = async (req) => {
           allBlogUpload.uploadStatus != "ONHOLD" &&
           allBlogUpload.uploadStatus != "UNASSIGNED" &&
           allBlogUpload.uploadStatus != "COMPLETE" &&
-          allBlogUpload.uploadStatus != "PENDING"
+          allBlogUpload.uploadStatus != "PROCESSING"
           // &&
           // allBlogUpload.uploadStatus != "PROCESSING"
         ) {
@@ -479,6 +502,7 @@ exports.getAllBlogs = async (req) => {
           fileRichText: ele.fileRichText,
           projectId: ele.projectId,
           projectName: ele.projectName,
+          createdAt: ele.createdAt,
           topic: allBlogTopic.topic,
           taskType: ele.taskType,
           topicId: allBlogTopic.id,
@@ -511,6 +535,11 @@ exports.getAllBlogs = async (req) => {
           uploadStatus: allBlogUpload.uploadStatus,
           uploadTimeEstimation: allBlogUpload.uploadTimeEstimation,
           uploadTime: allBlogUpload.uploadTime,
+
+          imageAssignedBy: allBlogImage.imageAssignedBy,
+          topicAssignedBy: allBlogTopic.topicAssignedBy,
+          uploadAssignedBy: allBlogUpload.uploadAssignedBy,
+          createdBy: ele.createdBy,
         });
       }
     }
@@ -559,6 +588,7 @@ exports.getBlogById = async (req) => {
         projectId: ele.projectId,
         projectName: ele.projectName,
         fileRichText: ele.fileRichText,
+        createdAt: ele.createdAt,
         topic: allBlogTopic.topic,
         topicWebsite: allBlogTopic.topicWebsite,
         topicStatus: allBlogTopic.topicStatus,
@@ -587,6 +617,11 @@ exports.getBlogById = async (req) => {
         uploadStatus: allBlogUpload.uploadStatus,
         uploadTimeEstimation: allBlogUpload.uploadTimeEstimation,
         uploadTime: allBlogUpload.uploadTime,
+
+        imageAssignedBy: allBlogImage.imageAssignedBy,
+        topicAssignedBy: allBlogTopic.topicAssignedBy,
+        uploadAssignedBy: allBlogUpload.uploadAssignedBy,
+        createdBy: ele.createdBy,
       });
     }
 
@@ -645,6 +680,7 @@ exports.getBlogByIdAssignee = async (req) => {
         projectId: data.projectId,
         projectName: data.projectName,
         fileRichText: data.fileRichText,
+        createdAt: data.createdAt,
         taskType: data.taskType,
         topicId: allBlogTopic.id,
         topic: allBlogTopic.topic,
@@ -681,6 +717,11 @@ exports.getBlogByIdAssignee = async (req) => {
         uploadStatus: allBlogUpload.uploadStatus,
         uploadTimeEstimation: allBlogUpload.uploadTimeEstimation,
         uploadTime: allBlogUpload.uploadTime,
+
+        imageAssignedBy: allBlogImage.imageAssignedBy,
+        topicAssignedBy: allBlogTopic.topicAssignedBy,
+        uploadAssignedBy: allBlogUpload.uploadAssignedBy,
+        createdBy: data.createdBy,
       });
 
       allAssignee.push({
@@ -688,6 +729,7 @@ exports.getBlogByIdAssignee = async (req) => {
         projectId: data.projectId,
         projectName: data.projectName,
         fileRichText: data.fileRichText,
+        createdAt: data.createdAt,
         taskType: data.taskType,
         topicId: allBlogTopic.id,
         topic: allBlogTopic.topic,
@@ -724,6 +766,11 @@ exports.getBlogByIdAssignee = async (req) => {
         uploadStatus: allBlogUpload.uploadStatus,
         uploadTimeEstimation: allBlogUpload.uploadTimeEstimation,
         uploadTime: allBlogUpload.uploadTime,
+
+        imageAssignedBy: allBlogImage.imageAssignedBy,
+        topicAssignedBy: allBlogTopic.topicAssignedBy,
+        uploadAssignedBy: allBlogUpload.uploadAssignedBy,
+        createdBy: data.createdBy,
       });
 
       allAssignee.push({
@@ -731,6 +778,7 @@ exports.getBlogByIdAssignee = async (req) => {
         projectId: data.projectId,
         projectName: data.projectName,
         fileRichText: data.fileRichText,
+        createdAt: data.createdAt,
         taskType: data.taskType,
         topicId: allBlogTopic.id,
         topic: allBlogTopic.topic,
@@ -767,6 +815,11 @@ exports.getBlogByIdAssignee = async (req) => {
         status: allBlogUpload.uploadStatus,
         uploadTimeEstimation: allBlogUpload.uploadTimeEstimation,
         uploadTime: allBlogUpload.uploadTime,
+
+        imageAssignedBy: allBlogImage.imageAssignedBy,
+        topicAssignedBy: allBlogTopic.topicAssignedBy,
+        uploadAssignedBy: allBlogUpload.uploadAssignedBy,
+        createdBy: data.createdBy,
       });
     }
 
@@ -880,6 +933,128 @@ exports.updateBlogTaskStatus = async (req) => {
 
       return {
         data: "Status updated",
+        error: null,
+        message: "SUCCESS",
+        statusCode: 200,
+      };
+    }
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+
+// **********blog update time api controller**********
+exports.updateBlogTimer = async (req) => {
+  try {
+    let { blogId, projectId, topicTime, imageTime, uploadTime } = req.body;
+
+    if (blogId == "" || projectId == "" || !blogId || !projectId) {
+      return {
+        data: null,
+        error: "something went wrong",
+        message: "Failed",
+        StatusCode: 400,
+      };
+    }
+    if (topicTime) {
+      // find blog
+      let findBlog = await Blog.findOne({
+        where: { id: blogId, projectId },
+      });
+      // if blog doesn't exist
+      if (findBlog == null) {
+        return {
+          data: null,
+          error: "blog  doesn't exist",
+          message: "Failed",
+          statusCode: 400,
+        };
+      }
+      let topicTask = await BlogTopic.findOne({
+        where: { id: findBlog.topicId, projectId },
+      });
+      const prevTime =
+        topicTask.topicTime == "" || topicTask.topicTime === null
+          ? 0
+          : topicTask.topicTime;
+      const updateTime = parseInt(prevTime) + parseInt(topicTime);
+
+      // update blog
+      await topicTask.update({
+        topicTime: updateTime,
+      });
+
+      return {
+        data: "Time updated",
+        error: null,
+        message: "SUCCESS",
+        statusCode: 200,
+      };
+    } else if (imageTime) {
+      // find blog
+      let findBlog = await Blog.findOne({
+        where: { id: blogId, projectId },
+      });
+
+      // if blog doesn't exist
+      if (findBlog == null) {
+        return {
+          data: null,
+          error: "blog  doesn't exist",
+          message: "Failed",
+          statusCode: 400,
+        };
+      }
+      let imageTask = await BlogImage.findOne({
+        where: { id: findBlog.imageSizeId, projectId },
+      });
+      const prevTime =
+        imageTask.imageTime == "" || imageTask.imageTime === null
+          ? 0
+          : imageTask.imageTime;
+      const updateTime = parseInt(prevTime) + parseInt(imageTime);
+      // update blog
+      await imageTask.update({
+        imageTime: updateTime,
+      });
+
+      return {
+        data: "Time updated",
+        error: null,
+        message: "SUCCESS",
+        statusCode: 200,
+      };
+    } else if (uploadTime) {
+      // find blog
+      let findBlog = await Blog.findOne({
+        where: { id: blogId, projectId },
+      });
+
+      // if blog doesn't exist
+      if (findBlog == null) {
+        return {
+          data: null,
+          error: "blog  doesn't exist",
+          message: "Failed",
+          statusCode: 400,
+        };
+      }
+      let uploadTask = await BlogUpload.findOne({
+        where: { id: findBlog.imageSizeId, projectId },
+      });
+      const prevTime =
+        uploadTask.uploadTime == "" || uploadTask.uploadTime === null
+          ? 0
+          : uploadTask.uploadTime;
+      const updateTime = parseInt(prevTime) + parseInt(uploadTime);
+
+      // update blog
+      await uploadTask.update({
+        uploadTime: updateTime,
+      });
+
+      return {
+        data: "Time updated",
         error: null,
         message: "SUCCESS",
         statusCode: 200,

@@ -80,7 +80,7 @@ router.put("/updateFourmTime", auth, async (req, res) => {
 });
 
 // *********delete fourm by id api*********
-router.delete("/deleteFourm", auth, async (req, res) => {
+router.post("/deleteFourm", auth, async (req, res) => {
   try {
     let deleteFourm = await fourmController.deleteFourm(req);
     let code = deleteFourm.statusCode;

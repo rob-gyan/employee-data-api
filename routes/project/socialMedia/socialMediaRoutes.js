@@ -79,9 +79,20 @@ router.put("/updateSocialMediaTaskStatus", auth, async (req, res) => {
     res.status(500).send(error);
   }
 });
+router.put("/updateSocialMediaTaskTime", auth, async (req, res) => {
+  try {
+    let updateSocialMediaStatus =
+      await socialMediaController.updateSocialMediaTaskTime(req);
+    let code = updateSocialMediaStatus.statusCode;
+    console.log(code);
+    res.status(code).send(updateSocialMediaStatus);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
 
 // *********delete SocialMedia by id api*********
-router.delete("/deleteSocialMedia", auth, async (req, res) => {
+router.post("/deleteSocialMedia", auth, async (req, res) => {
   try {
     let deleteSocialMedia = await socialMediaController.deleteSocialMedia(req);
     let code = deleteSocialMedia.statusCode;
